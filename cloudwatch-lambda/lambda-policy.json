@@ -1,0 +1,20 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogStreams"
+      ],
+      "Resource": [
+        "arn:aws:logs:us-west-2:767828764585:log-group:/presentation-demo/slide-events:*",
+        "arn:aws:logs:us-west-2:767828764585:log-group:/presentation-demo/slide-events",
+        "arn:aws:logs:us-west-2:767828764585:log-group:/aws/lambda/presentation-logger:*",
+        "arn:aws:logs:us-west-2:767828764585:log-group:/aws/lambda/presentation-logger"
+      ]
+    }
+  ]
+}

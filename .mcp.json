@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "cloudwatch": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/Users/josh/Projects/mcp/Log-Analyzer-with-MCP/src/cw-mcp-server",
+        "run",
+        "server.py",
+        "--profile",
+        "martian"
+      ],
+      "env": {}
+    }
+  }
+}
