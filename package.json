@@ -1,0 +1,24 @@
+{
+  "name": "renewhome",
+  "version": "1.0.0",
+  "description": "RenewHome AI Presentation Demo with CloudWatch Integration",
+  "private": true,
+  "workspaces": [
+    "presentation",
+    "cloudwatch-lambda"
+  ],
+  "scripts": {
+    "start:presentation": "cd presentation && npm run dev",
+    "build:presentation": "cd presentation && npm run build",
+    "deploy:lambda": "cd cloudwatch-lambda && ./deploy.sh",
+    "test:cloudwatch": "cd presentation && node test-api.js"
+  },
+  "keywords": [
+    "ai",
+    "cloudwatch",
+    "mcp",
+    "presentation"
+  ],
+  "author": "Martian Engineering, LLC",
+  "license": "MIT"
+}
