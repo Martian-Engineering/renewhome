@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Mono } from "next/font/google";
 import "./globals.css";
+import TimerWrapper from './components/TimerWrapper';
 
 // Use Space Mono as a fallback since Martian Mono is not directly available through next/font/google
 const martianMono = Space_Mono({
@@ -25,6 +26,7 @@ export default function RootLayout({
         className={`${martianMono.variable} antialiased`}
       >
         {children}
+        <TimerWrapper />
       </body>
     </html>
   );
