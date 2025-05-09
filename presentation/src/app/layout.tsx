@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Mono } from "next/font/google";
 import "./globals.css";
 import TimerWrapper from './components/TimerWrapper';
+import QRWrapper from './components/QRWrapper';
 
 // Use Space Mono as a fallback since Martian Mono is not directly available through next/font/google
 const martianMono = Space_Mono({
@@ -27,6 +28,7 @@ export default function RootLayout({
       >
         {children}
         <TimerWrapper />
+        <QRWrapper />
       </body>
     </html>
   );

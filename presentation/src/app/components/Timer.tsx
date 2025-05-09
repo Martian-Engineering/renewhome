@@ -70,7 +70,7 @@ export default function Timer() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 bg-black bg-opacity-80 text-white p-2 rounded-md z-50 flex gap-2 items-center">
+    <div className="fixed bottom-4 right-4 bg-black bg-opacity-80 text-white p-2 rounded-md z-40 flex gap-2 items-center">
       <div className="font-mono text-lg">{formatTime(time)}</div>
       <button 
         onClick={toggleTimer}
