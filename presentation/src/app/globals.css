@@ -1,3 +1,4 @@
+/* Use the new Tailwind CSS v4 import syntax */
 @import "tailwindcss";
 
 :root {
@@ -5,11 +6,18 @@
   --foreground: #171717;
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-mono: var(--font-martian-mono);
   --font-sans: var(--font-martian-mono);
+  
+  /* Add typography customization for Tailwind CSS v4 */
+  --prose-heading-font-weight: 700;
+  --prose-h2-font-size: 1.5rem;
+  --prose-h3-font-size: 1.25rem;
+  --prose-ul-list-style-type: disc;
+  --prose-ol-list-style-type: decimal;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -100,4 +108,89 @@ h3 {
     font-size: 1.5rem;
     line-height: 2rem;
   }
+}
+
+/* Tailwind v4 additional utility classes */
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.font-light {
+  font-weight: 300;
+}
+
+.text-gray-500 {
+  color: #6b7280;
+}
+
+.text-gray-600 {
+  color: #4b5563;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.z-10 {
+  z-index: 10;
+}
+
+.z-50 {
+  z-index: 50;
+}
+
+.bottom-8 {
+  bottom: 2rem;
+}
+
+.top-8 {
+  top: 2rem;
+}
+
+.right-8 {
+  right: 2rem;
+}
+
+.left-0 {
+  left: 0;
+}
+
+.right-0 {
+  right: 0;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+}
+
+.text-base {
+  font-size: 1rem;
+}
+
+.font-mono {
+  font-family: var(--font-martian-mono), monospace;
 }

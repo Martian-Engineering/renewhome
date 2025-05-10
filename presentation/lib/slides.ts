@@ -7,12 +7,26 @@ import { marked, Token, Tokens } from 'marked';
 
 const slidesDirectory = path.join(process.cwd(), 'slides-md');
 
-export interface SlideData {
+export interface SectionData {
   id: string; // e.g., "1-introduction"
   slug: string; // The full slug, same as id for now.
   slugParts: string[]; // e.g., ["1", "introduction"]
   number: number;
-  title: string;
+  title: string; // From H1
+  slides: SlideData[]; // Individual slides within this section
+  [key: string]: any; // For additional frontmatter
+}
+
+export interface SlideData {
+  id: string; // e.g., "1-introduction-about-us"
+  sectionId: string; // e.g., "1-introduction"
+  slug: string; // The full slug
+  slugParts: string[]; // e.g., ["1", "introduction", "about-us"]
+  number: number; // Overall slide number
+  sectionNumber: number; // Section number
+  slideNumber: number; // Slide number within section
+  title: string; // From H2
+  sectionTitle: string; // From H1 in the section markdown file
   contentHtml: string;
   [key: string]: any; // For additional frontmatter
 }
@@ -20,7 +34,10 @@ export interface SlideData {
 // Metadata for a slide, excluding the full content (for list views)
 export type SlideMeta = Omit<SlideData, 'contentHtml'>;
 
-export function getSortedSlidesData(): SlideMeta[] {
+// Metadata for a section, excluding the slides (for list views)
+export type SectionMeta = Omit<SectionData, 'slides'>;
+
+export function getSortedSectionsData(): SectionMeta[] {
   let fileNames: string[];
   try {
     fileNames = fs.readdirSync(slidesDirectory);
@@ -29,7 +46,7 @@ export function getSortedSlidesData(): SlideMeta[] {
     return [];
   }
 
-  const allSlidesData = fileNames
+  const allSectionsData = fileNames
     .filter((fileName) => fileName.endsWith('.md'))
     .map((fileName) => {
       const id = fileName.replace(/\.md$/, ''); // e.g., "1-introduction"
@@ -48,7 +65,6 @@ export function getSortedSlidesData(): SlideMeta[] {
         slugParts.push(titleSlug);
       }
       const slug = slugParts.join('-');
-
 
       const fullPath = path.join(slidesDirectory, fileName);
       const fileContents = fs.readFileSync(fullPath, 'utf8');
@@ -71,7 +87,7 @@ export function getSortedSlidesData(): SlideMeta[] {
       if (!title) {
         title = titleSlug.replace(/-/g, ' ').trim();
         if (!title) {
-          title = `Slide ${number}`;
+          title = `Section ${number}`;
         }
       }
       
@@ -85,70 +101,216 @@ export function getSortedSlidesData(): SlideMeta[] {
         number,
         title,
         ...frontmatter, // Spread all frontmatter here
-      } as SlideMeta;
+      } as SectionMeta;
     })
-    .filter(Boolean) as SlideMeta[]; // Filter out nulls from invalid filenames
+    .filter(Boolean) as SectionMeta[]; // Filter out nulls from invalid filenames
 
-  return allSlidesData.sort((a, b) => a.number - b.number);
+  return allSectionsData.sort((a, b) => a.number - b.number);
 }
 
-export async function getSlideData(slug: string): Promise<SlideData | null> {
-  const slidesMetadata = getSortedSlidesData();
-  // Find by full slug (id)
-  const slideMeta = slidesMetadata.find((s) => s.id === slug);
-
-  if (!slideMeta) {
-    // Fallback: if slug is just a number string, try to find by number
-    const num = parseInt(slug, 10);
-    if (!isNaN(num)) {
-        const slideByNum = slidesMetadata.find(s => s.number === num);
-        if (slideByNum) {
-            // If found by number, recall with its proper full slug (id)
-            return getSlideData(slideByNum.id);
-        }
-    }
-    return null; // Not found by id or number
-  }
-
-  const fullPath = path.join(slidesDirectory, `${slideMeta.id}.md`);
-  try {
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
-    const { data: frontmatter, content } = matter(fileContents);
-    // Process markdown to remove the first heading since we'll show it in the title
-    // @ts-ignore
-    const tokens = marked.lexer(content);
-    const firstHeadingIndex = tokens.findIndex(token => token.type === 'heading' && token.depth === 1);
+// Get all slides from all sections
+export function getSortedSlidesData(): SlideMeta[] {
+  const sections = getSortedSectionsData();
+  
+  let allSlides: SlideMeta[] = [];
+  let slideNumber = 1;
+  
+  sections.forEach((section) => {
+    const sectionSlides = getSectionSlides(section.id);
     
+    sectionSlides.forEach((slide) => {
+      slide.number = slideNumber++;
+      allSlides.push(slide);
+    });
+  });
+  
+  return allSlides;
+}
+
+// Get all slides from a specific section
+export function getSectionSlides(sectionId: string): SlideMeta[] {
+  const sections = getSortedSectionsData();
+  const section = sections.find(s => s.id === sectionId);
+  
+  if (!section) {
+    return [];
+  }
+  
+  // Read the file and parse the markdown
+  const fullPath = path.join(slidesDirectory, `${section.id}.md`);
+  const fileContents = fs.readFileSync(fullPath, 'utf8');
+  const { data: frontmatter, content } = matter(fileContents);
+  
+  // @ts-ignore
+  const tokens = marked.lexer(content);
+  
+  // Find all H2 headings - each represents a slide
+  const h2Indices: number[] = [];
+  tokens.forEach((token, index) => {
+    if (token.type === 'heading' && token.depth === 2) {
+      h2Indices.push(index);
+    }
+  });
+  
+  // If no H2 headings, treat the entire content as one slide
+  if (h2Indices.length === 0) {
+    // Remove the H1 heading as we'll use the section title
+    const firstHeadingIndex = tokens.findIndex(token => token.type === 'heading' && token.depth === 1);
     if (firstHeadingIndex !== -1) {
       tokens.splice(firstHeadingIndex, 1);
     }
     
-    // @ts-ignore
-    const contentHtml = marked.parser(tokens) as string;
+    const slug = `${section.slug}-main`;
+    const slideId = `${section.id}-main`;
+    const slideTitle = section.title;
+    
+    return [{
+      id: slideId,
+      sectionId: section.id,
+      slug,
+      slugParts: [...section.slugParts, 'main'],
+      number: 0, // Will be updated later
+      sectionNumber: section.number,
+      slideNumber: 1,
+      title: slideTitle,
+      sectionTitle: section.title, // Add section title
+      ...frontmatter
+    }];
+  }
+  
+  // Process each slide based on H2 headings
+  const slides: SlideMeta[] = [];
+  
+  h2Indices.forEach((startIndex, idx) => {
+    const endIndex = h2Indices[idx + 1] || tokens.length;
+    
+    // Extract this slide's content (from this H2 to the next H2 or end)
+    const slideTokens = tokens.slice(startIndex, endIndex);
+    
+    // Get the H2 heading token which contains the slide title
+    const h2Token = slideTokens[0] as Tokens.Heading;
+    const slideTitle = h2Token.text;
+    
+    // Create a slug from the title
+    const slideSlug = slugify(slideTitle);
+    const slideId = `${section.id}-${slideSlug}`;
+    
+    // Create slide metadata with properly formed ID
+    const fullSlideId = `${section.id}-${slideSlug}`;
+    
+    slides.push({
+      id: fullSlideId, // Use the full ID that includes section ID
+      sectionId: section.id,
+      slug: `${section.slug}-${slideSlug}`,
+      slugParts: [...section.slugParts, slideSlug],
+      number: 0, // Will be updated later
+      sectionNumber: section.number,
+      slideNumber: idx + 1,
+      title: slideTitle,
+      sectionTitle: section.title, // Add section title
+      ...frontmatter
+    });
+  });
+  
+  return slides;
+}
 
+export async function getSlideData(slideId: string): Promise<SlideData | null> {
+  const allSlides = getSortedSlidesData();
+  
+  // Try to find by ID first
+  let slideMeta = allSlides.find(s => s.id === slideId);
+  
+  // If not found, try to find by slug (ignoring case)
+  if (!slideMeta) {
+    slideMeta = allSlides.find(s => s.slug.toLowerCase() === slideId.toLowerCase());
+  }
+  
+  // If not found and it's a number, try to find by slide number
+  if (!slideMeta) {
+    const num = parseInt(slideId, 10);
+    if (!isNaN(num)) {
+      slideMeta = allSlides.find(s => s.number === num);
+      if (slideMeta) {
+        // Redirect to the proper ID
+        return getSlideData(slideMeta.id);
+      }
+    }
+  }
+  
+  if (!slideMeta) {
+    return null; // Not found
+  }
+  
+  try {
+    // Get the section data
+    const sectionId = slideMeta.sectionId;
+    const fullPath = path.join(slidesDirectory, `${sectionId}.md`);
+    const fileContents = fs.readFileSync(fullPath, 'utf8');
+    const { data: frontmatter, content } = matter(fileContents);
+    
+    // Parse the markdown
+    // @ts-ignore
+    const tokens = marked.lexer(content);
+    
+    // Find all H2 headings - each represents a slide
+    const h2Indices: number[] = [];
+    tokens.forEach((token, index) => {
+      if (token.type === 'heading' && token.depth === 2) {
+        h2Indices.push(index);
+      }
+    });
+    
+    // If no H2 headings, treat the entire content as one slide
+    if (h2Indices.length === 0) {
+      // Remove the H1 heading as we'll show it in the title
+      const firstHeadingIndex = tokens.findIndex(token => token.type === 'heading' && token.depth === 1);
+      if (firstHeadingIndex !== -1) {
+        tokens.splice(firstHeadingIndex, 1);
+      }
+      
+      // @ts-ignore
+      const contentHtml = marked.parser(tokens) as string;
+      
+      return {
+        ...slideMeta,
+        contentHtml,
+        ...frontmatter
+      } as SlideData;
+    }
+    
+    // Find which H2 corresponds to this slide
+    const slideIndex = slideMeta.slideNumber - 1;
+    if (slideIndex < 0 || slideIndex >= h2Indices.length) {
+      return null; // Invalid slide number
+    }
+    
+    const startIndex = h2Indices[slideIndex];
+    const endIndex = h2Indices[slideIndex + 1] || tokens.length;
+    
+    // Extract this slide's content (from this H2 to the next H2 or end)
+    const slideTokens = tokens.slice(startIndex, endIndex);
+    
+    // Remove the H2 heading as we'll show it in the title
+    slideTokens.shift();
+    
+    // @ts-ignore
+    const contentHtml = marked.parser(slideTokens) as string;
+    
     // Construct the final SlideData object
     const slideData: SlideData = {
-      id: slideMeta.id,
-      slug: slideMeta.slug,
-      slugParts: slideMeta.slugParts,
-      number: slideMeta.number,
-      title: slideMeta.title, // Title is already resolved in slideMeta
+      ...slideMeta,
       contentHtml,
-      ...frontmatter, // Add all frontmatter from the file
-      // Ensure slideMeta's specific frontmatter (if any beyond id, slug, etc.) is also included
-      // and takes precedence if there were any overlaps during its own creation.
-      // However, frontmatter from the direct file read (matterResult.data) should be more specific here.
-    };
-     // Merge slideMeta properties that might have been from its own frontmatter processing,
-     // ensuring they are not overwritten by the re-parsed frontmatter unless intended.
-     // The current structure should be fine as slideMeta.title is already resolved.
+      ...frontmatter
+    } as SlideData;
+    
+    // Ensure slideMeta properties take precedence
     Object.keys(slideMeta).forEach(key => {
-        if (!(key in slideData) || slideData[key] === undefined) {
-            slideData[key] = slideMeta[key];
-        }
+      if (!(key in slideData) || slideData[key] === undefined) {
+        slideData[key] = slideMeta[key];
+      }
     });
-
-
+    
     return slideData;
   } catch (error) {
     console.error(`Error reading or parsing slide ${slideMeta.id}:`, error);
@@ -165,11 +327,35 @@ export function getAllSlideSlugs() {
       // If your route is /slides/[...slug].tsx, then params.slug should be string[]
       // If your route is /slides/[slug].tsx, then params.slug should be string
       params: {
-        slug: slide.slugParts, // For [...slug].tsx (e.g. /slides/1/introduction)
-        // slug: slide.id, // For [slug].tsx (e.g. /slides/1-introduction)
+        slug: slide.slugParts, // For [...slug].tsx (e.g. /slides/1/introduction/about-us)
+        // slug: slide.id, // For [slug].tsx (e.g. /slides/1-introduction-about-us)
       },
     };
   });
+}
+
+// Get the next slide in sequence
+export function getNextSlide(currentSlideId: string): SlideMeta | null {
+  const allSlides = getSortedSlidesData();
+  const currentIndex = allSlides.findIndex(slide => slide.id === currentSlideId);
+  
+  if (currentIndex === -1 || currentIndex === allSlides.length - 1) {
+    return null; // Not found or last slide
+  }
+  
+  return allSlides[currentIndex + 1];
+}
+
+// Get the previous slide in sequence
+export function getPrevSlide(currentSlideId: string): SlideMeta | null {
+  const allSlides = getSortedSlidesData();
+  const currentIndex = allSlides.findIndex(slide => slide.id === currentSlideId);
+  
+  if (currentIndex <= 0) {
+    return null; // Not found or first slide
+  }
+  
+  return allSlides[currentIndex - 1];
 }
 
 // Helper to generate a slug from a title
@@ -178,7 +364,7 @@ export function slugify(text: string): string {
     .toString()
     .toLowerCase()
     .trim()
-    .replace(/\\s+/g, '-')           // Replace spaces with -
-    .replace(/[^\\w-]+/g, '')       // Remove all non-word chars
+    .replace(/\s+/g, '-')           // Replace spaces with -
+    .replace(/[^\w-]+/g, '')       // Remove all non-word chars
     .replace(/--+/g, '-');        // Replace multiple - with single -
 }
