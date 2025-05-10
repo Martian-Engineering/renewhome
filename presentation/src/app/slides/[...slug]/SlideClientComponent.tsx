@@ -75,15 +75,12 @@ export default function SlideClientComponent({
         />
       </div>
       <div className="w-full max-w-4xl mx-auto mt-24 md:mt-32">
-        <h1 className="text-3xl md:text-5xl font-bold mb-10 text-center">{slideData.title}</h1>
+        <h1 className="text-4xl md:text-6xl font-bold mb-10 text-left">{slideData.title}</h1>
         <div
-          className="prose lg:prose-xl max-w-none prose-headings:hidden"
+          className="prose prose-lg lg:prose-2xl prose-headings:font-bold prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-ul:list-disc prose-ol:list-decimal max-w-none"
           dangerouslySetInnerHTML={{ __html: slideData.contentHtml }}
           onClick={() => logUserInteraction(slideData.id, 'content', 'click')}
         />
-        <p className="mt-8 text-center text-sm text-gray-500">
-          Slide {slideData.number} of {slides.length}. Use left/right arrow keys to navigate.
-        </p>
       </div>
     </main>
   );
