@@ -218,7 +218,7 @@ export default function SlideClientComponent({
       <div className="w-full max-w-5xl mx-auto mt-6 md:mt-12 px-8">
         {/* Show the title unless hide-title directive is found */}
         {(!slideData.styleOptions?.hideTitle) && (
-          <h1 className="text-4xl md:text-6xl font-bold mb-8 text-left">{slideData.title}</h1>
+          <h1 className="text-3xl md:text-5xl font-bold mb-6 text-left">{slideData.title}</h1>
         )}
         
         <div
