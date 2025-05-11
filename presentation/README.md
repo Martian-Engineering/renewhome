@@ -1,12 +1,12 @@
 # AI-Assisted Development Presentation
 
-This presentation demonstrates AI-assisted development techniques, particularly the Model Context Protocol (MCP) for connecting Large Language Models to external services like AWS CloudWatch.
+This presentation demonstrates AI-assisted development techniques and best practices.
 
 ## Features
 
 - **Slide-based Presentation**: Built with Next.js
-- **CloudWatch Integration**: Logs user actions for AI analysis demo
-- **MCP Integration**: Connects Claude or other LLMs to real-time CloudWatch logs
+- **Interactive Elements**: Supports QR codes and timers
+- **Responsive Design**: Works across different screen sizes
 
 ## Getting Started
 
@@ -43,31 +43,18 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
-## CloudWatch Integration
+## Customization
 
-This presentation includes CloudWatch logging of user interactions:
+This presentation can be customized by:
 
-1. **Setup**:
-   - The logging system is configured in `.env.local`
-   - The API endpoint for CloudWatch is configured via `NEXT_PUBLIC_CLOUDWATCH_API`
+1. **Adding new slides**:
+   - Create new markdown files in the `slides-md` directory
+   - Follow the existing naming convention for proper ordering
 
-2. **What Gets Logged**:
-   - Slide navigation (when switching between slides)
-   - User interactions (clicks on slide content)
-   - Each log includes a session ID, timestamp, and slide information
+2. **Modifying styles**:
+   - Adjust the Tailwind CSS configuration in `tailwind.config.js`
+   - Add custom styles in `globals.css`
 
-3. **Viewing Logs**:
-   - See the `cloudwatch-logs-runbook.md` for detailed instructions
-   - Use the AWS CLI to query logs
-   - Connect to logs with Log-Analyzer-with-MCP for AI-assisted analysis
-
-4. **Demo Slide**:
-   - The `cloudwatch-demo.md` slide demonstrates the logging functionality
-   - It includes an interactive button to create custom log events
-
-## MCP Integration
-
-During the presentation, you can demonstrate connecting Claude or other LLMs to CloudWatch logs using:
-
-1. [Log-Analyzer-with-MCP](https://github.com/awslabs/Log-Analyzer-with-MCP)
-2. Follow the setup instructions in `cloudwatch-logs-runbook.md`
+3. **Adding interactive elements**:
+   - The presentation supports components like QR codes and timers
+   - See the `components` directory for implementation details

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import type { SlideData, SlideMeta } from '../../../../lib/slides';
-import { logSlideNavigation, logUserInteraction } from '../../cloudwatch-logger';
 import dynamic from 'next/dynamic';
 
 // Dynamic import to avoid SSR issues with mermaid
@@ -118,15 +117,9 @@ export default function SlideClientComponent({
     }
   }, [initialSlideData, allSlides]);
   
-  // Log slide view when slide changes
+  // Track slide information when slide changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      logSlideNavigation('initial', slideData.id);
-      
-      // Make logging functions available globally for demo slide
-      window.logSlideNavigation = logSlideNavigation;
-      window.logUserInteraction = logUserInteraction;
-      
       // Debug: Log section information
       console.log('Current slide:', {
         id: slideData.id,
@@ -173,9 +166,6 @@ export default function SlideClientComponent({
       }
 
       if (nextSlideId && nextSlide) {
-        // Log slide navigation before changing routes
-        logSlideNavigation(slideData.id, nextSlideId);
-        
         // Use the slugParts to construct the URL properly
         const slidePath = nextSlide.slugParts.join('/');
         const newUrl = `/slides/${slidePath}`;
@@ -223,7 +213,6 @@ export default function SlideClientComponent({
         
         <div
           className="prose prose-lg lg:prose-2xl prose-headings:font-bold prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-ul:list-disc prose-ol:list-decimal max-w-none"
-          onClick={() => logUserInteraction(slideData.id, 'content', 'click')}
         >
           {processedContent.length > 0 ? (
             processedContent
