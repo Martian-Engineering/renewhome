@@ -15,10 +15,12 @@ export default function MermaidWrapper({ chart }: { chart: string }) {
         // Dynamically import mermaid
         const mermaid = (await import('mermaid')).default;
         
-        // Initialize with minimal config
+        // Initialize with simpler config to ensure compatibility
         mermaid.initialize({
           startOnLoad: false,
-          theme: 'default'
+          theme: 'default',
+          fontSize: 18,
+          securityLevel: 'loose'
         });
         
         // Clean container
@@ -33,6 +35,29 @@ export default function MermaidWrapper({ chart }: { chart: string }) {
         // Insert the SVG
         if (containerRef.current) {
           containerRef.current.innerHTML = svg;
+          
+          // Make the SVG larger and more legible
+          const svgElement = containerRef.current.querySelector('svg');
+          if (svgElement) {
+            // Apply styling to the SVG for better visibility
+            svgElement.style.width = '100%';
+            svgElement.style.height = 'auto';
+            svgElement.style.maxWidth = '100%';
+            svgElement.style.minHeight = '400px';
+            
+            // Make text larger and more readable
+            const textElements = svgElement.querySelectorAll('text');
+            textElements.forEach(text => {
+              text.style.fontSize = '16px';
+              text.style.fontWeight = '500';
+            });
+            
+            // Make edges more visible
+            const edges = svgElement.querySelectorAll('.edge path');
+            edges.forEach(edge => {
+              edge.style.strokeWidth = '2px';
+            });
+          }
         }
       } catch (error) {
         console.error('Failed to render mermaid diagram:', error);
@@ -53,8 +78,8 @@ export default function MermaidWrapper({ chart }: { chart: string }) {
   }, [chart]);
   
   return (
-    <div className="my-8 mx-auto max-w-full text-center">
-      <div ref={containerRef} className="inline-block text-left">
+    <div className="my-8 mx-auto w-full max-w-6xl text-center">
+      <div ref={containerRef} className="inline-block text-left w-full min-h-[500px]">
         {/* Mermaid diagram will be rendered here */}
         Loading diagram...
       </div>
