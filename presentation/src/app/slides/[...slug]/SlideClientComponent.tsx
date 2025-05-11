@@ -5,6 +5,13 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import type { SlideData, SlideMeta } from '../../../../lib/slides';
 import { logSlideNavigation, logUserInteraction } from '../../cloudwatch-logger';
+import dynamic from 'next/dynamic';
+
+// Dynamic import to avoid SSR issues with mermaid
+const MermaidWrapper = dynamic(() => import('../../components/MermaidWrapper'), {
+  ssr: false,
+  loading: () => <div className="flex justify-center p-8 text-gray-500">Loading diagram...</div>
+});
 
 interface SlideClientComponentProps {
   initialSlideData: SlideData;
@@ -18,10 +25,97 @@ export default function SlideClientComponent({
   const router = useRouter();
   const [slideData, setSlideData] = useState<SlideData>(initialSlideData);
   const [slides, setSlides] = useState<SlideMeta[]>(allSlides);
+  const [processedContent, setProcessedContent] = useState<React.ReactNode[]>([]);
+
+  // Process slide content to extract and render Mermaid diagrams
+  const processSlideContent = (content: string) => {
+    // Regular expression to find Mermaid code blocks in HTML
+    const mermaidRegex = /<pre>\s*<code[^>]*class="[^"]*language-mermaid[^"]*"[^>]*>([\s\S]*?)<\/code>\s*<\/pre>/g;
+    
+    const parts: React.ReactNode[] = [];
+    let lastIndex = 0;
+    let match;
+    let foundMermaid = false;
+    
+    // Find all mermaid code blocks
+    while ((match = mermaidRegex.exec(content)) !== null) {
+      foundMermaid = true;
+      
+      // Add the HTML content before this Mermaid block
+      if (match.index > lastIndex) {
+        parts.push(
+          <div 
+            key={`html-${lastIndex}`} 
+            dangerouslySetInnerHTML={{ 
+              __html: content.substring(lastIndex, match.index) 
+            }} 
+          />
+        );
+      }
+      
+      // Extract and decode HTML entities in the Mermaid code
+      let mermaidCode = match[1].trim();
+      mermaidCode = mermaidCode.replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&amp;/g, '&');
+      
+      console.log("Using new MermaidWrapper with code:", mermaidCode);
+      
+      // Add the simplified Mermaid wrapper component
+      parts.push(
+        <MermaidWrapper 
+          key={`mermaid-${match.index}`} 
+          chart={mermaidCode} 
+        />
+      );
+      
+      lastIndex = match.index + match[0].length;
+    }
+    
+    // Add any remaining HTML content after the last Mermaid block
+    if (lastIndex < content.length) {
+      parts.push(
+        <div 
+          key={`html-${lastIndex}`} 
+          dangerouslySetInnerHTML={{ 
+            __html: content.substring(lastIndex) 
+          }} 
+        />
+      );
+    }
+    
+    // If no Mermaid diagrams were found using the HTML pattern,
+    // return the original content to avoid an empty slide
+    if (!foundMermaid) {
+      return [
+        <div 
+          key="original-content" 
+          dangerouslySetInnerHTML={{ 
+            __html: content 
+          }} 
+        />
+      ];
+    }
+    
+    return parts;
+  };
 
   useEffect(() => {
     setSlideData(initialSlideData);
     setSlides(allSlides);
+    
+    // Process the slide content to handle Mermaid diagrams
+    if (initialSlideData.contentHtml) {
+      console.log('Processing HTML content:', initialSlideData.contentHtml);
+      // Check for mermaid code block
+      if (initialSlideData.contentHtml.includes('language-mermaid')) {
+        console.log('Found mermaid code block in HTML');
+      } else {
+        console.log('No mermaid code blocks found in HTML');
+      }
+      
+      const processed = processSlideContent(initialSlideData.contentHtml);
+      console.log('Processed content length:', processed.length);
+      setProcessedContent(processed);
+    }
   }, [initialSlideData, allSlides]);
   
   // Log slide view when slide changes
@@ -129,9 +223,14 @@ export default function SlideClientComponent({
         
         <div
           className="prose prose-lg lg:prose-2xl prose-headings:font-bold prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-ul:list-disc prose-ol:list-decimal max-w-none"
-          dangerouslySetInnerHTML={{ __html: slideData.contentHtml }}
           onClick={() => logUserInteraction(slideData.id, 'content', 'click')}
-        />
+        >
+          {processedContent.length > 0 ? (
+            processedContent
+          ) : (
+            <div dangerouslySetInnerHTML={{ __html: slideData.contentHtml }} />
+          )}
+        </div>
       </div>
       
       {/* Show slide counter only */}
