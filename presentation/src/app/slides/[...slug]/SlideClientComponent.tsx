@@ -32,8 +32,27 @@ export default function SlideClientComponent({
       // Make logging functions available globally for demo slide
       window.logSlideNavigation = logSlideNavigation;
       window.logUserInteraction = logUserInteraction;
+      
+      // Debug: Log section information
+      console.log('Current slide:', {
+        id: slideData.id,
+        sectionId: slideData.sectionId,
+        sectionNumber: slideData.sectionNumber,
+        slideNumber: slideData.slideNumber,
+      });
+      
+      // Debug: Count slides per section
+      const sectionsCount = {};
+      slides.forEach(s => {
+        if (!sectionsCount[s.sectionId]) {
+          sectionsCount[s.sectionId] = 0;
+        }
+        sectionsCount[s.sectionId]++;
+      });
+      console.log('Slides per section:', sectionsCount);
+      console.log('Filter result:', slides.filter(s => s.sectionId === slideData.sectionId));
     }
-  }, [slideData.id]);
+  }, [slideData.id, slides]);
 
 
   useEffect(() => {
@@ -85,8 +104,8 @@ export default function SlideClientComponent({
 
   return (
     <>
-      {/* Section title in top right */}
-      <div className="fixed top-8 right-8 z-50">
+      {/* Section title in top right, aligned with logo */}
+      <div className="fixed top-4 right-4 md:top-8 md:right-8 p-4 z-50">
         <span className="font-mono text-2xl text-gray-500 font-light">
           {sectionTitle}
         </span>
@@ -115,9 +134,11 @@ export default function SlideClientComponent({
       
       {/* Show slide counter only */}
       <div className="fixed bottom-8 left-0 right-0 text-center text-base text-gray-500 z-10">
-        {slideData.slideNumber && slideData.slideNumber > 0 && (
-          <div>Slide {slideData.number} of {slides.length} | Section {slideData.slideNumber} of {slides.filter(s => s.sectionId === slideData.sectionId).length}</div>
-        )}
+        <div>
+          Slide {slideData.number} of {slides.length} | 
+          Section {slideData.sectionNumber} of 5 | 
+          Slide {slideData.slideNumber} in section
+        </div>
       </div>
     </main>
     </>
