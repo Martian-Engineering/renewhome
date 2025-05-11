@@ -105,25 +105,25 @@ export default function SlideClientComponent({
   return (
     <>
       {/* Section title in top right, aligned with logo */}
-      <div className="fixed top-4 right-4 md:top-8 md:right-8 p-4 z-50">
+      <div className="fixed top-2 right-2 md:top-4 md:right-4 p-2 z-50">
         <span className="font-mono text-2xl text-gray-500 font-light">
           {sectionTitle}
         </span>
       </div>
       
       <main className="flex min-h-screen flex-col items-center justify-start p-12 relative">
-        <div className="absolute top-4 left-4 md:top-8 md:left-8 p-4">
+        <div className="absolute top-2 left-2 md:top-4 md:left-4 p-2">
           <Image
             src="/martian-logo.jpg"
             alt="Martian Engineering Logo"
-            width={120}
-            height={120}
+            width={100}
+            height={100}
             className="rounded-full"
           />
         </div>
-      <div className="w-full max-w-4xl mx-auto mt-24 md:mt-32 px-8">
+      <div className="w-full max-w-5xl mx-auto mt-6 md:mt-12 px-8">
         {/* For legacy slides with just section title */}
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 text-left">{slideData.title}</h1>
+        <h1 className="text-4xl md:text-6xl font-bold mb-8 text-left">{slideData.title}</h1>
         
         <div
           className="prose prose-lg lg:prose-2xl prose-headings:font-bold prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-ul:list-disc prose-ol:list-decimal max-w-none"

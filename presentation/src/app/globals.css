@@ -123,6 +123,14 @@ h3 {
   text-align: right;
 }
 
+/* Custom image styling for slides */
+.prose img {
+  display: block;
+  margin: 2rem auto;
+  max-height: 60vh;
+  width: auto;
+}
+
 .font-bold {
   font-weight: bold;
 }
