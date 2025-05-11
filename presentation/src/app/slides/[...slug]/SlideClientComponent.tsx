@@ -122,8 +122,10 @@ export default function SlideClientComponent({
           />
         </div>
       <div className="w-full max-w-5xl mx-auto mt-6 md:mt-12 px-8">
-        {/* For legacy slides with just section title */}
-        <h1 className="text-4xl md:text-6xl font-bold mb-8 text-left">{slideData.title}</h1>
+        {/* Show the title unless hide-title directive is found */}
+        {(!slideData.styleOptions?.hideTitle) && (
+          <h1 className="text-4xl md:text-6xl font-bold mb-8 text-left">{slideData.title}</h1>
+        )}
         
         <div
           className="prose prose-lg lg:prose-2xl prose-headings:font-bold prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-ul:list-disc prose-ol:list-decimal max-w-none"

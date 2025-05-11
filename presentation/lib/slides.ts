@@ -28,6 +28,10 @@ export interface SlideData {
   title: string; // From H2
   sectionTitle: string; // From H1 in the section markdown file
   contentHtml: string;
+  styleOptions: {
+    hideTitle?: boolean;
+    [key: string]: any;
+  };
   [key: string]: any; // For additional frontmatter
 }
 
@@ -194,6 +198,22 @@ export function getSectionSlides(sectionId: string): SlideMeta[] {
     const h2Token = slideTokens[0] as Tokens.Heading;
     const slideTitle = h2Token.text;
     
+    // Parse styling directives (HTML comments after the H2)
+    const styleOptions: { hideTitle?: boolean; [key: string]: any } = {};
+    
+    // Look for HTML comments that might contain style directives
+    if (slideTokens.length > 1 && slideTokens[1].type === 'html') {
+      const htmlContent = (slideTokens[1] as any).text as string;
+      
+      // Check for hide-title directive
+      if (htmlContent.includes('<!-- hide-title -->')) {
+        styleOptions.hideTitle = true;
+        
+        // Remove this directive from the tokens
+        slideTokens.splice(1, 1);
+      }
+    }
+    
     // Track title occurrences for deduplication
     titleCounts[slideTitle] = (titleCounts[slideTitle] || 0) + 1;
     
@@ -218,6 +238,7 @@ export function getSectionSlides(sectionId: string): SlideMeta[] {
       slideNumber: idx + 1,
       title: slideTitle, // Keep the original title without the counter
       sectionTitle: section.title, // Add section title
+      styleOptions, // Add the parsed style options
       ...frontmatter
     });
   });
@@ -285,6 +306,7 @@ export async function getSlideData(slideId: string): Promise<SlideData | null> {
       return {
         ...slideMeta,
         contentHtml,
+        styleOptions: slideMeta.styleOptions || {},
         ...frontmatter
       } as SlideData;
     }
@@ -311,6 +333,7 @@ export async function getSlideData(slideId: string): Promise<SlideData | null> {
     const slideData: SlideData = {
       ...slideMeta,
       contentHtml,
+      styleOptions: slideMeta.styleOptions || {},
       ...frontmatter
     } as SlideData;
     
