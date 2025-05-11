@@ -181,6 +181,9 @@ export function getSectionSlides(sectionId: string): SlideMeta[] {
   // Process each slide based on H2 headings
   const slides: SlideMeta[] = [];
   
+  // Track duplicate slide titles to deduplicate slugs
+  const titleCounts: Record<string, number> = {};
+  
   h2Indices.forEach((startIndex, idx) => {
     const endIndex = h2Indices[idx + 1] || tokens.length;
     
@@ -191,9 +194,16 @@ export function getSectionSlides(sectionId: string): SlideMeta[] {
     const h2Token = slideTokens[0] as Tokens.Heading;
     const slideTitle = h2Token.text;
     
+    // Track title occurrences for deduplication
+    titleCounts[slideTitle] = (titleCounts[slideTitle] || 0) + 1;
+    
     // Create a slug from the title
-    const slideSlug = slugify(slideTitle);
-    const slideId = `${section.id}-${slideSlug}`;
+    let slideSlug = slugify(slideTitle);
+    
+    // If this is a duplicate title, append a counter
+    if (titleCounts[slideTitle] > 1) {
+      slideSlug = `${slideSlug}-${titleCounts[slideTitle]}`;
+    }
     
     // Create slide metadata with properly formed ID
     const fullSlideId = `${section.id}-${slideSlug}`;
@@ -206,7 +216,7 @@ export function getSectionSlides(sectionId: string): SlideMeta[] {
       number: 0, // Will be updated later
       sectionNumber: section.number,
       slideNumber: idx + 1,
-      title: slideTitle,
+      title: slideTitle, // Keep the original title without the counter
       sectionTitle: section.title, // Add section title
       ...frontmatter
     });
