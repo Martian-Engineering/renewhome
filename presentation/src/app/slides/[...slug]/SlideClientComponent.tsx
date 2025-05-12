@@ -182,8 +182,8 @@ export default function SlideClientComponent({
         const slidePath = nextSlide.slugParts.join('/');
         const newUrl = `/slides/${slidePath}`;
         
-        // Force a hard navigation to ensure proper loading
-        window.location.href = newUrl;
+        // Use Next.js router for client-side navigation to preserve state
+        router.push(newUrl);
       }
     };
 
