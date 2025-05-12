@@ -87,7 +87,7 @@ New: AI-Assisted Development in Practice
     * Don’t be afraid to start over — code is cheap  
       * Git is your friend  
     * AI is a good starting point for many tasks  
-      * Get a skeleton of an app  
+      * Get a skeleton of an app 
       * Get a document outline  
       * First draft of a report  
     * Don’t lose the theory of the program  
@@ -100,6 +100,7 @@ New: AI-Assisted Development in Practice
         * Can latch on to some little thing you mentioned offhandedly  
         * Loves to add timeouts, retries, and caches instead of solving a problem  
     * Put in work to reduce friction  
+      * Take the time to define good system prompts
       * Instruct the LLM to run verification scripts, like linting  
       * Instead of copying and pasting error messages, use Cursor agent mode or Claude Code  
       * Keep important docs in context, maybe even in the repo  

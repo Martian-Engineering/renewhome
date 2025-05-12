@@ -28,6 +28,10 @@
 * **o3** - Solving tough problems given copious context
 * **Claude 3.7 Sonnet** - Vibe coding, agentic workflows
 
+## Anatomy of a Conversation
+
+TODO
+
 ## Vibe Coding v. AI-assisted Development
 
 - What's the difference?
@@ -72,4 +76,5 @@
 
 ![not-vibe-coding](/not-vibe-coding.png)
 
-## 
+<!-- This is what we're interested in. -->
+<!-- TODO: Add slide to say as much? Or just discuss -->

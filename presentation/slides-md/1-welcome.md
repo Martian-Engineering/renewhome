@@ -18,6 +18,6 @@
 3. **Demo**: We'll tie everything together and build something
 4. **Lab**: Get your environment set up and experiment on Renew Home's codebases
 
-## Goal: don't be that guy
+<!-- ## Goal: don't be that guy
 
-![psychopath](/psychopath.png)
+![psychopath](/psychopath.png) -->
