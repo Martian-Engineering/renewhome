@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import type { SlideData, SlideMeta } from '../../../../lib/slides';
 import dynamic from 'next/dynamic';
+import { useTimer } from '../../contexts/TimerContext'; // Import the useTimer hook
 
 // Dynamic import to avoid SSR issues with mermaid
 const MermaidWrapper = dynamic(() => import('../../components/MermaidWrapper'), {
@@ -28,108 +29,89 @@ export default function SlideClientComponent({
   const [hasImages, setHasImages] = useState<boolean>(false);
   const [hasList, setHasList] = useState<boolean>(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  
+  const timerContext = useTimer();
 
   // Process slide content to extract and render Mermaid diagrams
   const processSlideContent = (content: string) => {
-    // Regular expression to find Mermaid code blocks in HTML
     const mermaidRegex = /<pre>\s*<code[^>]*class="[^"]*language-mermaid[^"]*"[^>]*>([\s\S]*?)<\/code>\s*<\/pre>/g;
-    
     const parts: React.ReactNode[] = [];
     let lastIndex = 0;
     let match;
     let foundMermaid = false;
-    
-    // Find all mermaid code blocks
     while ((match = mermaidRegex.exec(content)) !== null) {
       foundMermaid = true;
-      
-      // Add the HTML content before this Mermaid block
       if (match.index > lastIndex) {
-        parts.push(
-          <div 
-            key={`html-${lastIndex}`} 
-            dangerouslySetInnerHTML={{ 
-              __html: content.substring(lastIndex, match.index) 
-            }} 
-          />
-        );
+        parts.push(<div key={`html-${lastIndex}`} dangerouslySetInnerHTML={{ __html: content.substring(lastIndex, match.index) }} />);
       }
-      
-      // Extract and decode HTML entities in the Mermaid code
       let mermaidCode = match[1].trim();
       mermaidCode = mermaidCode.replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&amp;/g, '&');
-      
-      console.log("Using new MermaidWrapper with code:", mermaidCode);
-      
-      // Add the simplified Mermaid wrapper component
-      parts.push(
-        <MermaidWrapper 
-          key={`mermaid-${match.index}`} 
-          chart={mermaidCode} 
-        />
-      );
-      
+      parts.push(<MermaidWrapper key={`mermaid-${match.index}`} chart={mermaidCode} />);
       lastIndex = match.index + match[0].length;
     }
-    
-    // Add any remaining HTML content after the last Mermaid block
     if (lastIndex < content.length) {
-      parts.push(
-        <div 
-          key={`html-${lastIndex}`} 
-          dangerouslySetInnerHTML={{ 
-            __html: content.substring(lastIndex) 
-          }} 
-        />
-      );
+      parts.push(<div key={`html-${lastIndex}`} dangerouslySetInnerHTML={{ __html: content.substring(lastIndex) }} />);
     }
-    
-    // If no Mermaid diagrams were found using the HTML pattern,
-    // return the original content to avoid an empty slide
     if (!foundMermaid) {
-      return [
-        <div 
-          key="original-content" 
-          dangerouslySetInnerHTML={{ 
-            __html: content 
-          }} 
-        />
-      ];
+      return [<div key="original-content" dangerouslySetInnerHTML={{ __html: content }} />];
     }
-    
     return parts;
   };
 
   useEffect(() => {
-    setSlideData(initialSlideData);
-    setSlides(allSlides);
-    
-    // Process the slide content to handle Mermaid diagrams
-    if (initialSlideData.contentHtml) {
-      console.log('Processing HTML content:', initialSlideData.contentHtml);
-      // Check for mermaid code block
-      if (initialSlideData.contentHtml.includes('language-mermaid')) {
-        console.log('Found mermaid code block in HTML');
+    const currentSlide = initialSlideData;
+
+    if (currentSlide.sectionId !== timerContext.lastNavigatedSectionId) {
+      // New section or first load
+      timerContext.setLastNavigatedSectionId(currentSlide.sectionId);
+
+      if (currentSlide.sectionDurationSeconds !== undefined) {
+        timerContext.setSectionDuration(currentSlide.sectionDurationSeconds);
+        timerContext.resetSectionTimer();
+        timerContext.setIsSectionTimingActive(true);
       } else {
-        console.log('No mermaid code blocks found in HTML');
+        timerContext.setSectionDuration(null);
+        timerContext.setIsSectionTimingActive(false);
       }
-      
-      const processed = processSlideContent(initialSlideData.contentHtml);
-      console.log('Processed content length:', processed.length);
+    } else {
+      // Same section, timer should not reset.
+      // Update duration if it changed (e.g. hot reload) and ensure timing state.
+      if (currentSlide.sectionDurationSeconds !== undefined) {
+        if (timerContext.sectionDuration !== currentSlide.sectionDurationSeconds) {
+          timerContext.setSectionDuration(currentSlide.sectionDurationSeconds);
+        }
+        // If the section has a duration, ensure timing can be active.
+        // This could resume a paused timer if user navigates within the same section.
+        // Consider if this is the desired behavior or if manual pause should persist more strongly.
+        if (!timerContext.isSectionTimingActive) {
+          timerContext.setIsSectionTimingActive(true);
+        }
+      } else {
+        // Section definition changed to no longer have a duration.
+        if (timerContext.sectionDuration !== null) {
+          timerContext.setSectionDuration(null);
+        }
+        if (timerContext.isSectionTimingActive) {
+          timerContext.setIsSectionTimingActive(false);
+        }
+      }
+    }
+
+    // Update local component state for rendering this slide
+    setSlideData(currentSlide);
+    setSlides(allSlides); // allSlides prop might also change if new slides are added/removed dynamically
+    
+    if (currentSlide.contentHtml) {
+      const processed = processSlideContent(currentSlide.contentHtml);
       setProcessedContent(processed);
-      
-      // Check for images and lists to enable columnar layout
-      setHasImages(initialSlideData.contentHtml.includes('<img'));
+      setHasImages(currentSlide.contentHtml.includes('<img'));
       setHasList(
-        initialSlideData.contentHtml.includes('<ul') || 
-        initialSlideData.contentHtml.includes('<li>')
+        currentSlide.contentHtml.includes('<ul') || 
+        currentSlide.contentHtml.includes('<li>')
       );
     }
-  }, [initialSlideData, allSlides]);
-  
-  // We'll use CSS Grid for the layout instead of JavaScript DOM manipulation
-  
-  // Track slide information when slide changes
+  }, [initialSlideData, allSlides, timerContext]);
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       // Debug: Log section information
@@ -138,51 +120,31 @@ export default function SlideClientComponent({
         sectionId: slideData.sectionId,
         sectionNumber: slideData.sectionNumber,
         slideNumber: slideData.slideNumber,
+        sectionDurationSeconds: slideData.sectionDurationSeconds, // Log duration
+        timerContextLastSection: timerContext.lastNavigatedSectionId // Log context section
       });
-      
-      // Debug: Count slides per section
-      const sectionsCount = {};
-      slides.forEach(s => {
-        if (!sectionsCount[s.sectionId]) {
-          sectionsCount[s.sectionId] = 0;
-        }
-        sectionsCount[s.sectionId]++;
-      });
-      console.log('Slides per section:', sectionsCount);
-      console.log('Filter result:', slides.filter(s => s.sectionId === slideData.sectionId));
     }
-  }, [slideData.id, slides]);
-
+  }, [slideData, timerContext.lastNavigatedSectionId]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const currentIndex = slides.findIndex(s => s.id === slideData.id);
       
-      if (currentIndex === -1) {
-        return;
-      }
+      if (currentIndex === -1) return;
 
-      let nextSlideId: string | null = null;
-      let nextSlide = null;
+      let nextSlide: SlideMeta | null = null;
 
       if (event.key === 'ArrowRight') {
-        // Move to the next slide (or first slide if at the end)
         const nextIndex = (currentIndex + 1) % slides.length;
         nextSlide = slides[nextIndex];
-        nextSlideId = nextSlide.id;
       } else if (event.key === 'ArrowLeft') {
-        // Move to the previous slide (or last slide if at the beginning)
         const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
         nextSlide = slides[prevIndex];
-        nextSlideId = nextSlide.id;
       }
 
-      if (nextSlideId && nextSlide) {
-        // Use the slugParts to construct the URL properly
+      if (nextSlide) {
         const slidePath = nextSlide.slugParts.join('/');
         const newUrl = `/slides/${slidePath}`;
-        
-        // Use Next.js router for client-side navigation to preserve state
         router.push(newUrl);
       }
     };
@@ -191,12 +153,10 @@ export default function SlideClientComponent({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [router, slideData, slides]);
+  }, [router, slideData.id, slides]);
 
   // Get section title from the slide data
   const sectionTitle = slideData.sectionTitle || "Welcome";
-
-  
 
   return (
     <>

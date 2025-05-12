@@ -26,6 +26,7 @@ export interface SectionData {
   number: number;
   title: string; // From H1
   slides: SlideData[]; // Individual slides within this section
+  sectionDurationSeconds?: number; // New field for section timer
   [key: string]: any; // For additional frontmatter
 }
 
@@ -39,6 +40,7 @@ export interface SlideData {
   slideNumber: number; // Slide number within section
   title: string; // From H2
   sectionTitle: string; // From H1 in the section markdown file
+  sectionDurationSeconds?: number; // Duration of the parent section in seconds
   contentHtml: string;
   hasImageAndText?: boolean; // Flag to indicate if a slide has both image and text content
   styleOptions: {
@@ -87,6 +89,21 @@ export function getSortedSectionsData(): SectionMeta[] {
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       const { data: frontmatter, content } = matter(fileContents);
 
+      // Extract sectionDurationSeconds from the raw file content
+      let sectionDurationSeconds: number | undefined = undefined;
+      const timeRegex = /<!--\s*section-time:\s*(\d+)([ms]?)\s*-->/;
+      const timeMatch = fileContents.match(timeRegex); // Match against raw fileContents
+
+      if (timeMatch) {
+        const value = parseInt(timeMatch[1], 10);
+        const unit = timeMatch[2]?.toLowerCase();
+        if (unit === 'm') {
+          sectionDurationSeconds = value * 60;
+        } else { // 's' or unit is absent, treat as seconds
+          sectionDurationSeconds = value;
+        }
+      }
+
       let title = frontmatter.title as string | undefined;
 
       if (!title) {
@@ -117,6 +134,7 @@ export function getSortedSectionsData(): SectionMeta[] {
         slugParts,
         number,
         title,
+        sectionDurationSeconds, // Add the parsed duration here
         ...frontmatter, // Spread all frontmatter here
       } as SectionMeta;
     })
@@ -191,6 +209,7 @@ export function getSectionSlides(sectionId: string): SlideMeta[] {
       slideNumber: 1,
       title: slideTitle,
       sectionTitle: section.title, // Add section title
+      sectionDurationSeconds: section.sectionDurationSeconds, // Add section duration
       ...frontmatter
     }];
   }
@@ -251,6 +270,7 @@ export function getSectionSlides(sectionId: string): SlideMeta[] {
       slideNumber: idx + 1,
       title: slideTitle, // Keep the original title without the counter
       sectionTitle: section.title, // Add section title
+      sectionDurationSeconds: section.sectionDurationSeconds, // Add section duration
       styleOptions, // Add the parsed style options
       ...frontmatter
     });

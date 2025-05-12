@@ -1,4 +1,5 @@
 # Hands-on Lab
+<!-- section-time: 30m -->
 
 ## Setup
 

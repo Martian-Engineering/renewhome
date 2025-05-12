@@ -1,6 +1,5 @@
 # Foundations
-
-<!-- TIME: 10 minutes total -->
+<!-- section-time: 10m -->
 
 ## Overview
 

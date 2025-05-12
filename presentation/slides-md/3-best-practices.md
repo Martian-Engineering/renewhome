@@ -1,4 +1,5 @@
 # Best Practices 
+<!-- section-time: 15m -->
 
 ## Overview
 

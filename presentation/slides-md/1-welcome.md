@@ -1,4 +1,5 @@
 # Welcome
+<!-- section-time: 5m -->
 
 ## About Us
 
