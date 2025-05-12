@@ -119,13 +119,13 @@
   * At the repository level
 * Let's walk through how to do this in VS Code
 
-## Defining a user-level system prompt
+## VS Code: User-level system prompt
 
 ![system-prompt-1](/system-prompt-1.png)
 ![user-system-prompt1](/user-system-prompt-1.png)
 ![user-system-prompt2](/user-system-prompt-2.png)
 
-## Defining a repo-level system prompt
+## VS Code: Repo-level system prompt
 
 ![system-prompt-1](/system-prompt-1.png)
 ![repository-system-prompt1](/repository-system-prompt.png)
