@@ -217,7 +217,7 @@ export default function SlideClientComponent({
             className="rounded-full"
           />
         </div>
-      <div className="w-full max-w-5xl mx-auto mt-6 md:mt-12 px-8">
+      <div className="w-full max-w-7xl mx-auto mt-6 md:mt-12 px-6 md:px-10">
         {/* Show the title unless hide-title directive is found */}
         {(!slideData.styleOptions?.hideTitle) && (
           <h1 className="text-3xl md:text-5xl font-bold mb-6 text-left">{slideData.title}</h1>
