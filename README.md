@@ -5,7 +5,6 @@ This monorepo contains components for demonstrating AI-assisted development thro
 ## Repository Structure
 
 - **presentation/**: Next.js slide presentation with CloudWatch logging integration
-- **cloudwatch-lambda/**: AWS Lambda function for receiving and writing logs to CloudWatch
 
 ## Setup
 
@@ -15,24 +14,13 @@ This monorepo contains components for demonstrating AI-assisted development thro
 - AWS CLI configured with appropriate credentials
 - An AWS account with permissions for Lambda, API Gateway, and CloudWatch
 
-### CloudWatch Lambda Deployment
-
-The Lambda function handles logging from the presentation to CloudWatch:
-
-```bash
-cd cloudwatch-lambda
-./deploy.sh
-```
-
 ### Presentation Setup
 
 To run the slide presentation locally:
 
 ```bash
-cd presentation
 npm install
-# Create .env.local with the CloudWatch API endpoint from Lambda deployment
-npm run dev
+npm run start:presentation
 ```
 
 ## Features
@@ -43,5 +31,4 @@ npm run dev
 
 ## Documentation
 
-- See `presentation/cloudwatch-logs-runbook.md` for CloudWatch operations
-- See `cloudwatch-lambda/README.md` for Lambda deployment details
+- See `presentation/README.md` for presentation deployment details

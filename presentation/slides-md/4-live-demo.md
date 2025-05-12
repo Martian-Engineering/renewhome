@@ -1,15 +1,16 @@
 # Live Demo
 <!-- section-time: 15m -->
 
-## First Slide TODO
+## Ideas
 
-> Purpose: Learn to use Sourcegraph, VS Code + agentic editing, and tie concepts together
-> 
-
-**Flow**
-
-1. Learn about a repository with Sourcegraph
-2. Use knowledge to plan a new feature
-3. Leverage best practices to leverage agentic AI in development of feature
-
-## Second Slide TODO
+- Cody: 
+  - Explain Cody feature: how does "Document Code" feature work?
+  - How does Cody use tools?
+- Universal Code Search:
+  - repo:^github\.com/sourcegraph/cody$ author:mrnugget type:diff
+  - repo:^github\.com/sourcegraph/cody$ author:mrnugget type:commit
+- VSCode: Add a QR Code feature
+  - Describe what we want in detail in a task document
+  - Feed it as context
+  - Watch it check out a new branch because system prompt
+  - Generate commit message with Cody (segue to next section)
