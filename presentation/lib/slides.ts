@@ -5,6 +5,18 @@ import matter from 'gray-matter';
 // @ts-ignore - Assuming types are installed and will be resolved by the build system
 import { marked, Token, Tokens } from 'marked';
 
+// Configure marked to keep mermaid code blocks intact
+marked.use({
+  renderer: {
+    code(code, language) {
+      if (language === 'mermaid') {
+        return `\`\`\`mermaid\n${code}\`\`\``;
+      }
+      return false; // Use default renderer for other languages
+    },
+  },
+});
+
 const slidesDirectory = path.join(process.cwd(), 'slides-md');
 
 export interface SectionData {

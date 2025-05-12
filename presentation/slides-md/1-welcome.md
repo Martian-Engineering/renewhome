@@ -17,3 +17,7 @@
 2. **Best Practices**: We'll share our lessons learned to save you time and avoid pain
 3. **Demo**: We'll tie everything together and build something
 4. **Lab**: Get your environment set up and experiment on Renew Home's codebases
+
+## Goal: don't be that guy
+
+![psychopath](/psychopath.png)

@@ -7,11 +7,12 @@
 **Goal: establish a shared mental model**
 
 * Leading models, personalities, use-cases
-* Anatomy of a conversation
-* Context management
+<!-- * Anatomy of a conversation
+* Context management -->
+* Vibe coding v. AI-assisted development
 
 ## Models: Personalities
-<!-- hide-title --> 
+<!-- hide-title -->
 
 ![](/personalities.png)
 
@@ -27,45 +28,48 @@
 * **o3** - Solving tough problems given copious context
 * **Claude 3.7 Sonnet** - Vibe coding, agentic workflows
 
-## Anatomy of a Conversation
+## Vibe Coding v. AI-assisted Development
 
-<!-- A mermaid diagram showing a richer conversation flow -->
+- What's the difference?
+- If you're using AI, are you vibe coding?
 
-```mermaid
-graph TD
-    SP["System Prompt"] --> UI1["User Input"]
-    UI1 --> AO1["Assistant Output"]
-    AO1 --> UI2["User Follow-up"]
-    UI2 --> AO2["Assistant Response"]
-    
-    EXT["External Tools/Knowledge"]
-    MEM["Conversation Memory"]
-    
-    AO1 --- EXT
-    AO2 --- MEM
-```
+## Vibe Coding 
 
-## Context Management
+<!-- hide-title -->
 
-```mermaid
-graph TD
-    A[LLM Model]
-    
-    SP[System Prompt]
-    UI1[Current Query]
-    H1[Recent History]
-    H2[Older History...]
-    
-    T1[External Tools]
-    K1[Knowledge Base]
-    
-    SP --> A
-    UI1 --> A
-    H1 --> A
-    H2 --> A
-    
-    A --> T1
-    A --> K1
-    
-    A --> Response
-```
+![vibe-coding](/vibe-coding.png)
+
+## Vibe Coding
+<!-- hide-title -->
+
+> writing a sufficiently complex program requires not only the artifact of code (that is, the program source), but a *theory of the program*, in which an individual must fully understand the logical structure behind the code. Vibe coding; that is, writing programs almost exclusively by language-model generation; produces an artifact with no theory behind it. 
+>
+> Clayton Ramsey, [I'd rather read the prompt](https://claytonwramsey.com/blog/prompt/)
+
+## Vibe Coding 
+
+* AI writes all the code
+* Little to none is reviewed
+* No understanding of the logical structure behind the code
+* Good for:
+  - Prototyping, experimentation
+  - Throw-away scripts
+  - Short-lived projects
+* *This presentation was vibe coded*
+
+## AI-assisted Development
+
+* AI assists at various stages of development:
+  - Understanding the codebase
+  - Generating documentation
+  - Designing an implementation plan
+  - Writing code!
+* The key difference from vibe coding:
+* *You need to actually read the code and make the decisions!*
+
+## Not Vibe Coding
+<!-- hide-title -->
+
+![not-vibe-coding](/not-vibe-coding.png)
+
+## 
