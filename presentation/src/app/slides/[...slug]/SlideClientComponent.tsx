@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import type { SlideData, SlideMeta } from '../../../../lib/slides';
@@ -25,6 +25,9 @@ export default function SlideClientComponent({
   const [slideData, setSlideData] = useState<SlideData>(initialSlideData);
   const [slides, setSlides] = useState<SlideMeta[]>(allSlides);
   const [processedContent, setProcessedContent] = useState<React.ReactNode[]>([]);
+  const [hasImages, setHasImages] = useState<boolean>(false);
+  const [hasList, setHasList] = useState<boolean>(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   // Process slide content to extract and render Mermaid diagrams
   const processSlideContent = (content: string) => {
@@ -114,8 +117,17 @@ export default function SlideClientComponent({
       const processed = processSlideContent(initialSlideData.contentHtml);
       console.log('Processed content length:', processed.length);
       setProcessedContent(processed);
+      
+      // Check for images and lists to enable columnar layout
+      setHasImages(initialSlideData.contentHtml.includes('<img'));
+      setHasList(
+        initialSlideData.contentHtml.includes('<ul') || 
+        initialSlideData.contentHtml.includes('<li>')
+      );
     }
   }, [initialSlideData, allSlides]);
+  
+  // We'll use CSS Grid for the layout instead of JavaScript DOM manipulation
   
   // Track slide information when slide changes
   useEffect(() => {
@@ -214,10 +226,17 @@ export default function SlideClientComponent({
         <div
           className="prose prose-lg lg:prose-2xl prose-headings:font-bold prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-ul:list-disc prose-ol:list-decimal max-w-none"
         >
+          {/* Debug: {slideData.id} */}
           {processedContent.length > 0 ? (
             processedContent
           ) : (
-            <div dangerouslySetInnerHTML={{ __html: slideData.contentHtml }} />
+            <div>
+              {/* Simple standard rendering - our client-side useEffect will handle the layout */}
+              <div 
+                ref={contentRef}
+                dangerouslySetInnerHTML={{ __html: slideData.contentHtml }} 
+              />
+            </div>
           )}
         </div>
       </div>

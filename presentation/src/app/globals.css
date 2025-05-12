@@ -131,6 +131,115 @@ h3 {
   width: auto;
 }
 
+/* Two-column layout for slides with images and lists */
+@media (min-width: 768px) {
+  /* Special case for slides with screenshots in paragraphs */
+  .prose:has(h1:contains('LLMs are good at git')) {
+    & ul {
+      display: block;
+      width: 50%;
+      float: left;
+      clear: left;
+    }
+    
+    & p img {
+      display: block;
+      float: right;
+      width: 45%;
+      max-height: 60vh;
+      object-fit: contain;
+      margin-left: 2rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  /* A slide with both a list and an image should use the two-column layout */
+  .prose:has(img):has(li) {
+    /* Simple float-based layout for clarity */
+    & img {
+      display: block;
+      float: right;
+      width: 45%;
+      max-height: 60vh;
+      object-fit: contain;
+      margin-left: 2rem;
+      margin-bottom: 1rem;
+    }
+    
+    /* Keep text on the left, give it enough space */
+    & ul, 
+    & ol,
+    & p:not(:has(img)),
+    & blockquote {
+      display: block;
+      width: 50%;
+      float: left;
+      clear: left;
+    }
+  }
+  
+  /* A slide with both a blockquote and an image should use the two-column layout */
+  .prose:has(img):has(blockquote) {
+    /* Simple float-based layout for clarity */
+    & img {
+      display: block;
+      float: right;
+      width: 45%;
+      max-height: 60vh;
+      object-fit: contain;
+      margin-left: 2rem;
+      margin-bottom: 1rem;
+    }
+    
+    /* Keep text on the left, give it enough space */
+    & ul, 
+    & ol,
+    & p:not(:has(img)),
+    & blockquote {
+      display: block;
+      width: 50%;
+      float: left;
+      clear: left;
+    }
+    
+    /* Specific adjustments for blockquotes in two-column layout */
+    & blockquote {
+      box-sizing: border-box;
+      width: 50%;
+      background-color: #f8fafc;
+      border-left: 5px solid #6b7280;
+    }
+  }
+  
+  /* Full-width styling for blockquotes when no images */
+  .prose:not(:has(img)) blockquote {
+    box-sizing: border-box;
+    width: 100%;
+    background-color: #f8fafc;
+    border-left: 5px solid #6b7280;
+  }
+}
+  
+/* Ensure the image doesn't overlap with text for all slides */
+.prose h1, 
+.prose h2, 
+.prose h3, 
+.prose h4, 
+.prose h5, 
+.prose h6 {
+  width: 100%;
+  clear: both;
+  display: block;
+}
+
+/* Clear floats after the slide content */
+.prose:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
 .font-bold {
   font-weight: bold;
 }
@@ -215,6 +324,7 @@ h3 {
   background-color: #f8fafc;
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box; /* Ensure padding is included in width calculation */
 }
 
 .prose blockquote p {

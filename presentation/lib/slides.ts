@@ -40,6 +40,7 @@ export interface SlideData {
   title: string; // From H2
   sectionTitle: string; // From H1 in the section markdown file
   contentHtml: string;
+  hasImageAndText?: boolean; // Flag to indicate if a slide has both image and text content
   styleOptions: {
     hideTitle?: boolean;
     [key: string]: any;
@@ -315,9 +316,18 @@ export async function getSlideData(slideId: string): Promise<SlideData | null> {
       // @ts-ignore
       const contentHtml = marked.parser(tokens) as string;
       
+      // Check if the slide has both images and text - we need more robust detection
+      const hasImage = contentHtml.includes('<img');
+      // Check for text that's not just within the image paragraph
+      const contentWithoutImages = contentHtml.replace(/<p>\s*<img[^>]*>\s*<\/p>/g, '');
+      const hasText = contentWithoutImages.trim().length > 0;
+      // Only set it to true if we have a balance of text and image content
+      const hasImageAndText = hasImage && hasText;
+      
       return {
         ...slideMeta,
         contentHtml,
+        hasImageAndText,
         styleOptions: slideMeta.styleOptions || {},
         ...frontmatter
       } as SlideData;
@@ -341,10 +351,19 @@ export async function getSlideData(slideId: string): Promise<SlideData | null> {
     // @ts-ignore
     const contentHtml = marked.parser(slideTokens) as string;
     
+    // Check if the slide has both images and text - we need more robust detection
+    const hasImage = contentHtml.includes('<img');
+    // Check for text that's not just within the image paragraph
+    const contentWithoutImages = contentHtml.replace(/<p>\s*<img[^>]*>\s*<\/p>/g, '');
+    const hasText = contentWithoutImages.trim().length > 0;
+    // Only set it to true if we have a balance of text and image content
+    const hasImageAndText = hasImage && hasText;
+    
     // Construct the final SlideData object
     const slideData: SlideData = {
       ...slideMeta,
       contentHtml,
+      hasImageAndText,
       styleOptions: slideMeta.styleOptions || {},
       ...frontmatter
     } as SlideData;

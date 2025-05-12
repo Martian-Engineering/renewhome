@@ -5,7 +5,6 @@
 * Don't offload thinking
 * Git is your friend
 * Put in work to reduce friction
-* Get AI to do your grunt work
 
 ## Don't offload thinking
 
@@ -17,6 +16,10 @@
 <!-- hide-title -->
 
 ![rubber-duck](/rubber-duck.avif)
+
+* Talk through your problem step by step
+* Often you'll find the solution just by explaining it
+* If not, at least you'll clarify your thinking
 
 ## Planning
 
@@ -100,4 +103,83 @@
 ## LLMs are good at git!
 
 * Forgot how to do an interactive rebase? 
-* Use the AI to write commit messages
+* Need to clean up history, or run a bisect?
+* Work with the AI to understand git commands, feed it terminal output, provide context
+
+## LLMs are good at git!
+
+* Use Sourcegraph Cody to write commit messages from within VS Code
+
+![cody-commit](/cody-commit.png)
+
+## Put in work to reduce friction
+
+* Take the time to define system prompts:
+  * At the user level
+  * At the repository level
+* Let's walk through how to do this in VS Code
+
+## Defining a user-level system prompt
+
+![system-prompt-1](/system-prompt-1.png)
+![user-system-prompt1](/user-system-prompt-1.png)
+![user-system-prompt2](/user-system-prompt-2.png)
+
+## Defining a repo-level system prompt
+
+![system-prompt-1](/system-prompt-1.png)
+![repository-system-prompt1](/repository-system-prompt.png)
+![repository-system-prompt2](/repository-system-prompt-2.png)
+
+## System prompts
+
+* Elements of a good system prompt:
+  * About the user and nature of their work
+  * Coding preferences
+  * Preferred toolchain
+  * Common patterns
+
+## System prompts: my prompt
+
+> My name is Josh Lehman. I'm one of two owners of Martian Engineering, LLC, a software consulting firm. Our github organization is 'Martian-Engineering'. I'm an experienced entrepreneur and programmer. I keep most of my work in the `/Users/josh/Projects` folder.  If you git-clone a repo, please put it there. If you're not sure where some code lives, it likely lives there. If you're curious about API keys or other configuration, I have `export` commands in my `~/.zshrc` file that sets most of them.
+> 
+> ## When you are programming:
+>
+> \- New features should be isolated and additive -- change as little as possible.
+>
+> \- Never "improve" what isn't broken unless explicitly asked.
+>
+> \- Do not add caches, retry loops, or small delays unless explicitly asked.
+>
+> \- Do not modify versions of existing dependencies unless explicitly asked. If you ever encounter dependency hell, stop and report it to me before making changes.
+>
+> \- Avoid monkey-patching. If you think you really need to, ask me first.
+>
+> \- Always try to keep your functions, methods and classes small and simple unless they absolutely have to be large and complex.
+>
+> \- For functions, classes, methods, etc that grow beyond 10 or so lines, document their internals with comments proportional to line count — the larger they get, the more heavily commented.
+>
+> \- Always add docstrings to public functions, methods, classes, protocols, etc — that describe its purpose. Do the same using comments for private ones.
+>
+> \- Keep files simple. Each file should have one clear purpose.
+>
+>
+> \## Tasks
+>
+> Tasks, if any are defined, should be in the `tasks` directory of the repository as markdown files.
+>
+> Before beginning a task, ensure that a new git branch that's specific to that task is checked out the task name prefixed by my first name, e.g. `josh/some-task`
+>
+> When working on a task, keep a log in the task file of changes made by recording the specific relative filepaths of the changed files. When you believe that you've finished a task, update its STATUS to PENDING APPROVAL and ask me to approve it. After I do so, commit your changes and update the name of the task to be prefixed with `COMPLETE-`.
+>
+> When new requirements are introduced during a conversation, or you get a better idea of what steps are required, write them down in the task file before tackling them.
+>
+> \## Orientation
+>
+> If you are an LLM reading this, please start by picking up where you left off. The first step is to examine the current state of the repository. Check the git commits to see what has been done already. Also check the git status to see if there was any uncommitted, potentially unfinished work. If you do not have the ability to do this, ask me to provide this context.
+>
+> \## Git Workflow
+>
+> After making a series of changes to the code that comprise a single line of work, remember to git-commit your changes. The git commit message should be idiomatic in the sense that it has a short single line followed by long-form content after a newline. Make your commits comprehensive.
+>
+> Before performing a sequence of destructive changes — e.g. editing files, using git, executing bash commands — explain your plan to me and ask for feedback. I'll make suggestions or tell you to proceed. If you're several commands in and things aren't going according to plan, stop what you're doing and reiterate what you're trying to do to me.
