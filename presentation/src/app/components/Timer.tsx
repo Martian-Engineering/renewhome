@@ -93,13 +93,13 @@ export default function Timer() {
             onClick={handleToggleTimer}
             className={`${isSectionTimingActive ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'} text-white px-2 py-1 rounded text-sm`}
           >
-            {isSectionTimingActive ? 'Pause Section' : 'Resume Section'}
+            {isSectionTimingActive ? 'Pause' : 'Resume'}
           </button>
           <button
             onClick={handleResetTimer}
             className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-sm"
           >
-            Reset Section
+            Reset
           </button>
         </>
       )}
