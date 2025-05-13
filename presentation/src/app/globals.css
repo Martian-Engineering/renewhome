@@ -405,3 +405,27 @@ h3 {
     line-height: 3.5rem;
   }
 }
+
+/* Image columns layout for multiple images in a slide */
+.prose.image-columns p {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 1rem;
+}
+
+.prose.image-columns p img {
+  margin: 1rem 0;
+  max-width: 45%;
+  float: none;
+  object-fit: contain;
+}
+
+/* Make sure image columns work on mobile too */
+@media (max-width: 767px) {
+  .prose.image-columns p img {
+    max-width: 100%;
+  }
+}

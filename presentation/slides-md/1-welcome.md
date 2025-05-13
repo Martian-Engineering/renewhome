@@ -52,3 +52,9 @@ I use it sometimes
 ## You identify with this guy
 
 ![psychopath](/psychopath.png)
+
+## Goal
+<!-- image-columns -->
+
+![](/skeptic.png)
+![](/they-took-our-jobs.png)

@@ -45,6 +45,8 @@ export interface SlideData {
   hasImageAndText?: boolean; // Flag to indicate if a slide has both image and text content
   styleOptions: {
     hideTitle?: boolean;
+    isLead?: boolean;
+    imageColumns?: boolean;
     [key: string]: unknown;
   };
   [key: string]: unknown; // For additional frontmatter
@@ -253,6 +255,13 @@ export function getSectionSlides(sectionId: string): SlideMeta[] {
       // Check for lead directive
       else if (htmlContent.includes('<!-- lead -->')) {
         styleOptions.isLead = true;
+        
+        // Remove this directive from the tokens
+        slideTokens.splice(1, 1);
+      }
+      // Check for image-columns directive
+      else if (htmlContent.includes('<!-- image-columns -->')) {
+        styleOptions.imageColumns = true;
         
         // Remove this directive from the tokens
         slideTokens.splice(1, 1);

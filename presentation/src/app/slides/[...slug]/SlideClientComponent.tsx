@@ -181,7 +181,7 @@ export default function SlideClientComponent({
         )}
         
         <div
-          className={`prose prose-lg lg:prose-2xl prose-headings:font-bold prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-ul:list-disc prose-ol:list-decimal max-w-none ${slideData.styleOptions?.isLead ? 'lead' : ''}`}
+          className={`prose prose-lg lg:prose-2xl prose-headings:font-bold prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-ul:list-disc prose-ol:list-decimal max-w-none ${slideData.styleOptions?.isLead ? 'lead' : ''} ${slideData.styleOptions?.imageColumns ? 'image-columns' : ''}`}
         >
           {/* Debug: {slideData.id} */}
           {processedContent.length > 0 ? (
