@@ -156,15 +156,9 @@ export default function SlideClientComponent({
 
   return (
     <>
-      {/* Section title in top right, aligned with logo */}
-      <div className="fixed top-2 right-2 md:top-4 md:right-4 p-2 z-50">
-        <span className="font-mono text-2xl text-gray-500 font-light">
-          {sectionTitle}
-        </span>
-      </div>
-      
       <main className="flex min-h-screen flex-col items-center justify-start p-12 relative">
-        <div className="absolute top-2 left-2 md:top-4 md:left-4 p-2">
+        {/* Logo in top left */}
+        <div className="absolute top-6 left-6 md:top-8 md:left-8 p-2">
           <Image
             src="/martian-logo.jpg"
             alt="Martian Engineering Logo"
@@ -172,6 +166,13 @@ export default function SlideClientComponent({
             height={100}
             className="rounded-full"
           />
+        </div>
+        
+        {/* Section title in top right, matched with logo position */}
+        <div className="absolute top-6 right-6 md:top-8 md:right-8 p-2 flex items-center">
+          <span className="font-mono text-2xl text-gray-500 font-light">
+            {sectionTitle}
+          </span>
         </div>
       <div className="w-full max-w-7xl mx-auto mt-6 md:mt-12 px-6 md:px-10">
         {/* Show the title unless hide-title directive is found */}
