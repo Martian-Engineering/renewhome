@@ -143,7 +143,7 @@ export default function SlideClientComponent({
       }
 
       if (nextSlide) {
-        const slidePath = nextSlide.slugParts.join('/');
+        const slidePath = (nextSlide.slugParts as string[]).join('/');
         const newUrl = `/slides/${slidePath}`;
         router.push(newUrl);
       }

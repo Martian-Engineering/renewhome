@@ -41,12 +41,12 @@ export default async function SlidePage({ params }: SlidePageProps) {
   if (!slideData) {
     // Try to find by matching against slugParts
     const matchingSlide = allSlides.find(s => 
-      s.slugParts.join('-') === slideId || 
-      s.slugParts.join('/') === slug.join('/')
+      (s.slugParts as string[]).join('-') === slideId || 
+      (s.slugParts as string[]).join('/') === slug.join('/')
     );
     
     if (matchingSlide) {
-      slideData = await getSlideData(matchingSlide.id);
+      slideData = await getSlideData(matchingSlide.id as string);
     }
   }
 

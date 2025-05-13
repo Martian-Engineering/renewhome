@@ -2,14 +2,13 @@ import 'server-only';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-// @ts-expect-error - Assuming types are installed and will be resolved by the build system
 import { marked, Token, Tokens } from 'marked';
 
 // Configure marked to keep mermaid code blocks intact
 marked.use({
   renderer: {
-    // @ts-ignore - Handling type mismatch with marked's Renderer interface
-    code(code, language) {
+    // @ts-expect-error - Marked typing issue with renderer
+    code: function(code, language) {
       if (language === 'mermaid') {
         return `\`\`\`mermaid\n${code}\`\`\``;
       }
@@ -28,7 +27,7 @@ export interface SectionData {
   title: string; // From H1
   slides: SlideData[]; // Individual slides within this section
   sectionDurationSeconds?: number; // New field for section timer
-  [key: string]: any; // For additional frontmatter
+  [key: string]: unknown; // For additional frontmatter
 }
 
 export interface SlideData {
@@ -46,9 +45,9 @@ export interface SlideData {
   hasImageAndText?: boolean; // Flag to indicate if a slide has both image and text content
   styleOptions: {
     hideTitle?: boolean;
-    [key: string]: any;
+    [key: string]: unknown;
   };
-  [key: string]: any; // For additional frontmatter
+  [key: string]: unknown; // For additional frontmatter
 }
 
 // Metadata for a slide, excluding the full content (for list views)
@@ -108,7 +107,6 @@ export function getSortedSectionsData(): SectionMeta[] {
       let title = frontmatter.title as string | undefined;
 
       if (!title) {
-        // @ts-ignore
         const tokens = marked.lexer(content);
         const firstHeading = tokens.find(
           (token: Token): token is Tokens.Heading => // Use Tokens.Heading
@@ -141,7 +139,7 @@ export function getSortedSectionsData(): SectionMeta[] {
     })
     .filter(Boolean) as SectionMeta[]; // Filter out nulls from invalid filenames
 
-  return allSectionsData.sort((a, b) => a.number - b.number);
+  return allSectionsData.sort((a, b) => (a.number as number) - (b.number as number));
 }
 
 // Get all slides from all sections
@@ -152,7 +150,7 @@ export function getSortedSlidesData(): SlideMeta[] {
   let slideNumber = 1;
   
   sections.forEach((section) => {
-    const sectionSlides = getSectionSlides(section.id);
+    const sectionSlides = getSectionSlides(section.id as string);
     
     sectionSlides.forEach((slide) => {
       slide.number = slideNumber++;
@@ -177,7 +175,6 @@ export function getSectionSlides(sectionId: string): SlideMeta[] {
   const fileContents = fs.readFileSync(fullPath, 'utf8');
   const { data: frontmatter, content } = matter(fileContents);
   
-  // @ts-ignore
   const tokens = marked.lexer(content);
   
   // Find all H2 headings - each represents a slide
@@ -204,7 +201,7 @@ export function getSectionSlides(sectionId: string): SlideMeta[] {
       id: slideId,
       sectionId: section.id,
       slug,
-      slugParts: [...section.slugParts, 'main'],
+      slugParts: [...(section.slugParts as string[]), 'main'],
       number: 0, // Will be updated later
       sectionNumber: section.number,
       slideNumber: 1,
@@ -232,11 +229,11 @@ export function getSectionSlides(sectionId: string): SlideMeta[] {
     const slideTitle = h2Token.text;
     
     // Parse styling directives (HTML comments after the H2)
-    const styleOptions: { hideTitle?: boolean; [key: string]: any } = {};
+    const styleOptions: { hideTitle?: boolean; [key: string]: unknown } = {};
     
     // Look for HTML comments that might contain style directives
     if (slideTokens.length > 1 && slideTokens[1].type === 'html') {
-      const htmlContent = (slideTokens[1] as any).text as string;
+      const htmlContent = (slideTokens[1] as unknown as { text: string }).text;
       
       // Check for hide-title directive
       if (htmlContent.includes('<!-- hide-title -->')) {
@@ -265,7 +262,7 @@ export function getSectionSlides(sectionId: string): SlideMeta[] {
       id: fullSlideId, // Use the full ID that includes section ID
       sectionId: section.id,
       slug: `${section.slug}-${slideSlug}`,
-      slugParts: [...section.slugParts, slideSlug],
+      slugParts: [...(section.slugParts as string[]), slideSlug],
       number: 0, // Will be updated later
       sectionNumber: section.number,
       slideNumber: idx + 1,
@@ -288,7 +285,7 @@ export async function getSlideData(slideId: string): Promise<SlideData | null> {
   
   // If not found, try to find by slug (ignoring case)
   if (!slideMeta) {
-    slideMeta = allSlides.find(s => s.slug.toLowerCase() === slideId.toLowerCase());
+    slideMeta = allSlides.find(s => (s.slug as string).toLowerCase() === slideId.toLowerCase());
   }
   
   // If not found and it's a number, try to find by slide number
@@ -298,7 +295,7 @@ export async function getSlideData(slideId: string): Promise<SlideData | null> {
       slideMeta = allSlides.find(s => s.number === num);
       if (slideMeta) {
         // Redirect to the proper ID
-        return getSlideData(slideMeta.id);
+        return getSlideData(slideMeta.id as string);
       }
     }
   }
@@ -315,7 +312,6 @@ export async function getSlideData(slideId: string): Promise<SlideData | null> {
     const { data: frontmatter, content } = matter(fileContents);
     
     // Parse the markdown
-    // @ts-ignore
     const tokens = marked.lexer(content);
     
     // Find all H2 headings - each represents a slide
@@ -334,7 +330,6 @@ export async function getSlideData(slideId: string): Promise<SlideData | null> {
         tokens.splice(firstHeadingIndex, 1);
       }
       
-      // @ts-ignore
       const contentHtml = marked.parser(tokens) as string;
       
       // Check if the slide has both images and text - we need more robust detection
@@ -355,7 +350,7 @@ export async function getSlideData(slideId: string): Promise<SlideData | null> {
     }
     
     // Find which H2 corresponds to this slide
-    const slideIndex = slideMeta.slideNumber - 1;
+    const slideIndex = (slideMeta.slideNumber as number) - 1;
     if (slideIndex < 0 || slideIndex >= h2Indices.length) {
       return null; // Invalid slide number
     }
@@ -369,7 +364,6 @@ export async function getSlideData(slideId: string): Promise<SlideData | null> {
     // Remove the H2 heading as we'll show it in the title
     slideTokens.shift();
     
-    // @ts-ignore
     const contentHtml = marked.parser(slideTokens) as string;
     
     // Check if the slide has both images and text - we need more robust detection
