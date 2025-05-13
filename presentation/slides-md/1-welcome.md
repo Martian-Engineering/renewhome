@@ -1,6 +1,8 @@
 # Welcome
 <!-- section-time: 5m -->
 
+## Practical AI Applications for Software Teams 
+
 ## About Us
 
 - We're Josh & Ted, we run Martian Engineering

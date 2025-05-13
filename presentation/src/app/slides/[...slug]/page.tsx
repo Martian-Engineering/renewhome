@@ -4,17 +4,18 @@ import SlideClientComponent from './SlideClientComponent';
 import { notFound } from 'next/navigation';
 import React from 'react';
 
+// Define our page props for Next.js App Router
 interface SlidePageProps {
-  params: {
+  params: Promise<{
     slug: string[]; // e.g., ["1", "introduction"]
-  };
+  }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 // This is a Server Component
 export default async function SlidePage({ params }: SlidePageProps) {
-  // Properly await params before using properties
-  const paramsResolved = await Promise.resolve(params);
-  const slug = paramsResolved.slug;
+  // In Next.js 15, params is a Promise
+  const { slug } = await params;
   
   // Determine how to parse the slug based on its structure
   let slideId: string;
@@ -73,7 +74,7 @@ export default async function SlidePage({ params }: SlidePageProps) {
 
 // Optional: Add metadata for each slide page
 // export async function generateMetadata({ params }: SlidePageProps) {
-//   const { slug } = params;
+//   const { slug } = await params;
 //   const currentSlideId = slug.join('-');
 //   const slideData = await getSlideData(currentSlideId);
 

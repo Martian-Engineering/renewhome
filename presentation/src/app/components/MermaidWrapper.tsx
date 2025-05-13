@@ -23,8 +23,10 @@ export default function MermaidWrapper({ chart }: { chart: string }) {
           securityLevel: 'loose'
         });
         
-        // Clean container
-        containerRef.current.innerHTML = '';
+        // Clean container (we already checked containerRef.current earlier, but add extra safety)
+        if (containerRef.current) {
+          containerRef.current.innerHTML = '';
+        }
         
         // Create a unique ID for this render
         const id = `mermaid-${Math.random().toString(36).substring(2, 10)}`;
@@ -48,14 +50,16 @@ export default function MermaidWrapper({ chart }: { chart: string }) {
             // Make text larger and more readable
             const textElements = svgElement.querySelectorAll('text');
             textElements.forEach(text => {
-              text.style.fontSize = '16px';
-              text.style.fontWeight = '500';
+              // Force the type cast through unknown
+              ((text as unknown) as SVGTextElement).style.fontSize = '16px';
+              ((text as unknown) as SVGTextElement).style.fontWeight = '500';
             });
             
             // Make edges more visible
             const edges = svgElement.querySelectorAll('.edge path');
             edges.forEach(edge => {
-              edge.style.strokeWidth = '2px';
+              // Force the type cast through unknown
+              ((edge as unknown) as SVGPathElement).style.strokeWidth = '2px';
             });
           }
         }

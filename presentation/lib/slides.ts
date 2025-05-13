@@ -2,12 +2,13 @@ import 'server-only';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-// @ts-ignore - Assuming types are installed and will be resolved by the build system
+// @ts-expect-error - Assuming types are installed and will be resolved by the build system
 import { marked, Token, Tokens } from 'marked';
 
 // Configure marked to keep mermaid code blocks intact
 marked.use({
   renderer: {
+    // @ts-ignore - Handling type mismatch with marked's Renderer interface
     code(code, language) {
       if (language === 'mermaid') {
         return `\`\`\`mermaid\n${code}\`\`\``;
@@ -147,7 +148,7 @@ export function getSortedSectionsData(): SectionMeta[] {
 export function getSortedSlidesData(): SlideMeta[] {
   const sections = getSortedSectionsData();
   
-  let allSlides: SlideMeta[] = [];
+  const allSlides: SlideMeta[] = [];
   let slideNumber = 1;
   
   sections.forEach((section) => {
