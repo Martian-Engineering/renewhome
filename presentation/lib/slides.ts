@@ -229,7 +229,7 @@ export function getSectionSlides(sectionId: string): SlideMeta[] {
     const slideTitle = h2Token.text;
     
     // Parse styling directives (HTML comments after the H2)
-    const styleOptions: { hideTitle?: boolean; [key: string]: unknown } = {};
+    const styleOptions: { hideTitle?: boolean; isLead?: boolean; [key: string]: unknown } = {};
     
     // Look for HTML comments that might contain style directives
     if (slideTokens.length > 1 && slideTokens[1].type === 'html') {
@@ -238,6 +238,21 @@ export function getSectionSlides(sectionId: string): SlideMeta[] {
       // Check for hide-title directive
       if (htmlContent.includes('<!-- hide-title -->')) {
         styleOptions.hideTitle = true;
+        
+        // Remove this directive from the tokens
+        slideTokens.splice(1, 1);
+      }
+      // Check for hide-title, lead combo directive
+      else if (htmlContent.includes('<!-- hide-title, lead -->')) {
+        styleOptions.hideTitle = true;
+        styleOptions.isLead = true;
+        
+        // Remove this directive from the tokens
+        slideTokens.splice(1, 1);
+      }
+      // Check for lead directive
+      else if (htmlContent.includes('<!-- lead -->')) {
+        styleOptions.isLead = true;
         
         // Remove this directive from the tokens
         slideTokens.splice(1, 1);
