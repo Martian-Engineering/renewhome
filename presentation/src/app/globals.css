@@ -48,10 +48,34 @@ h2 {
 h3 {
   font-size: 1.25rem;
   line-height: 1.75rem;
+  color: #6b7280; /* Light grey color (same as text-gray-500) */
+}
+
+@media (min-width: 768px) {
+  h3 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
 }
 
 .prose {
   font-family: var(--font-martian-mono), monospace;
+}
+
+.prose h3 {
+  color: #6b7280; /* Light grey color (same as text-gray-500) */
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: normal; /* Make subtitle look less prominent */
+}
+
+@media (min-width: 768px) {
+  .prose h3 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
 }
 
 /* Explicitly style list items */
@@ -96,7 +120,7 @@ h3 {
   margin-bottom: 1.25rem;
 }
 
-.prose li {
+.prose li, .prose p {
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
   font-size: 1.25rem;
@@ -104,7 +128,7 @@ h3 {
 }
 
 @media (min-width: 768px) {
-  .prose li {
+  .prose li, .prose p {
     font-size: 1.5rem;
     line-height: 2rem;
   }
