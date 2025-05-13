@@ -28,6 +28,11 @@ export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     return 0;
   });
   const [isSectionTimingActive, setIsSectionTimingActive] = useState<boolean>(false);
+  
+  // Log state changes for debugging
+  useEffect(() => {
+    console.log('Timer state changed:', { isSectionTimingActive });
+  }, [isSectionTimingActive]);
   const [lastNavigatedSectionId, setLastNavigatedSectionId] = useState<string | null>(null); // New state
 
   useEffect(() => {

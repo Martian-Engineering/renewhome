@@ -80,12 +80,8 @@ export default function SlideClientComponent({
         if (timerContext.sectionDuration !== currentSlide.sectionDurationSeconds) {
           timerContext.setSectionDuration(currentSlide.sectionDurationSeconds);
         }
-        // If the section has a duration, ensure timing can be active.
-        // This could resume a paused timer if user navigates within the same section.
-        // Consider if this is the desired behavior or if manual pause should persist more strongly.
-        if (!timerContext.isSectionTimingActive) {
-          timerContext.setIsSectionTimingActive(true);
-        }
+        // We're no longer automatically resuming paused timers
+        // This allows the user's manual pause to persist when navigating within the same section
       } else {
         // Section definition changed to no longer have a duration.
         if (timerContext.sectionDuration !== null) {

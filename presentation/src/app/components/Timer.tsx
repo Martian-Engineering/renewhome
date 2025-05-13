@@ -15,8 +15,11 @@ export default function Timer() {
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
-
+    
+    console.log('Timer effect running, isSectionTimingActive:', isSectionTimingActive);
+    
     if (isSectionTimingActive && sectionDuration !== null) {
+      console.log('Starting timer interval');
       interval = setInterval(() => {
         setCurrentSectionElapsedTime((prevTime: number) => { // Explicitly type prevTime
           // Increment time if it's less than the section's duration
@@ -28,10 +31,17 @@ export default function Timer() {
           return prevTime; 
         });
       }, 1000);
+    } else if (interval) {
+      console.log('Clearing timer interval');
+      clearInterval(interval);
+      interval = null;
     }
 
     return () => {
-      if (interval) clearInterval(interval);
+      if (interval) {
+        console.log('Cleanup: clearing timer interval');
+        clearInterval(interval);
+      }
     };
   }, [isSectionTimingActive, sectionDuration, setCurrentSectionElapsedTime]);
 
@@ -43,6 +53,7 @@ export default function Timer() {
 
   const handleToggleTimer = () => {
     if (sectionDuration !== null) { // Only allow toggle if a section with duration is active
+      console.log('Toggling timer state from', isSectionTimingActive, 'to', !isSectionTimingActive);
       setIsSectionTimingActive(!isSectionTimingActive);
     }
   };
@@ -80,7 +91,7 @@ export default function Timer() {
         <>
           <button
             onClick={handleToggleTimer}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-sm"
+            className={`${isSectionTimingActive ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'} text-white px-2 py-1 rounded text-sm`}
           >
             {isSectionTimingActive ? 'Pause Section' : 'Resume Section'}
           </button>
