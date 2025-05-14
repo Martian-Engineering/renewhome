@@ -14,7 +14,7 @@ This presentation covers the following key areas:
 
 ## Technical Details
 
-The presentation is built using Next.js and Tailwind CSS. It includes interactive elements like timers and QR code generation.
+The presentation is built using Next.js and Tailwind CSS. It includes interactive elements like timers and section countdowns.
 
 ## Getting Started with the Presentation Code
 

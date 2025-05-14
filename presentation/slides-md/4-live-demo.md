@@ -55,3 +55,8 @@ Sourcegraph Cody
 4. What are some 
 
  -->
+
+## Q&A
+<!-- hide-title, lead -->
+
+Open Q&A: Any questions?
