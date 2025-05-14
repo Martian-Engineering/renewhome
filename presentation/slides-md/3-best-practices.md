@@ -1,7 +1,7 @@
 # Best Practices 
 <!-- section-time: 15m -->
 
-## Overview
+## Best Practices
 
 * Don't offload thinking
 * Git is your friend
