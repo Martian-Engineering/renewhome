@@ -1,5 +1,5 @@
 # Hands-on Lab
-<!-- section-time: 30m -->
+<!-- section-time: 20m -->
 
 ## Choose your own adventure
 

@@ -1,9 +1,7 @@
 # Foundations
 <!-- section-time: 10m -->
 
-## Overview
-
-**Goal: establish a shared mental model**
+## Foundations
 
 * Leading models, personalities, use-cases
 <!-- * Anatomy of a conversation

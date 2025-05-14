@@ -1,20 +1,39 @@
 # Introduction
-<!-- section-time: 5m -->
+<!-- section-time: 10m -->
 
 ## Practical AI Applications for Software Teams 
 
 ### Josh Lehman & Ted Blackman, Martian Engineering
 
+## Purpose
+<!-- hide-title, lead -->
+
+By the end of this talk, we want you to have a good understanding of best practices for using AI in the software development process.
+
+## What we'll cover
+
+1. **Foundations**: Basics, vibe coding v. AI-assisted development
+2. **Best Practices**: We'll share our lessons learned to save you time and avoid pain
+3. **Demo**: We'll tie everything together and build something
+4. **Lab**: Get your environment set up and experiment on Renew Home's codebases
+
 ## About Us
 
 - We're Ted & Josh, owners of Martian Engineering
 - Writing software for 10+ years apiece
-- Dove into AI development in September 2024
+- We've also managed engineering teams
+- Founded multiple startups
+- Started AI development in September 2024
 
 ## Our motivation
 <!-- hide-title, lead -->
 
 Can AI be used to build *real* software?
+
+## Our answer
+<!-- hide-title, lead -->
+
+Our answer: yes, if you know how to use it
 
 ## We've used AI to build:
 
@@ -32,29 +51,27 @@ Can AI be used to build *real* software?
 
 – Our clients & friends
 
-## What we'll cover
-
-1. **Foundations**: Basics, vibe coding v. AI-assisted development
-2. **Best Practices**: We'll share our lessons learned to save you time and avoid pain
-3. **Demo**: We'll tie everything together and build something
-4. **Lab**: Get your environment set up and experiment on Renew Home's codebases
 
 ## Show of hands
 <!-- lead -->
 
-I use AI during my day-to-day development work
+I use AI on a daily basis
 
 ## Show of hands
 <!-- lead -->
 
-I use it sometimes
+I use AI sometimes
 
 ## You identify with this guy
 
 ![psychopath](/psychopath.png)
 
 ## Goal
-<!-- image-columns -->
+<!--hide-title  -->
 
 ![](/skeptic.png)
+
+## Goal
+<!--hide-title  -->
+
 ![](/they-took-our-jobs.png)
