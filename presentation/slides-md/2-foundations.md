@@ -15,17 +15,31 @@
 
 ![](/personalities.png)
 
+## Models
+
+* **Gemini 2.5 Pro** – Google
+* **o3** – OpenAI
+* **Claude 3.7 Sonnet** – Anthropic
+
 ## Models: Personalities
 
-* **Gemini 2.5 Pro** – smart, TODO: Ted
-* **o3** – slow, very smart, requires lots of context
-* **Claude 3.7 Sonnet** – fast, excels at tool use, may rewrite React from scratch if you don't watch it closely
+| Model | Intelligence&nbsp;&nbsp; | Attitude&nbsp;&nbsp;&nbsp;&nbsp; | Good with Tools&nbsp;&nbsp;| Context Size |
+| --- | --- | --- | --- | --- |
+| **Gemini 2.5 Pro** | Smart | Cautious | ❌ | 1M tokens |
+| **o3** | Very Smart | Know-it-all&nbsp;&nbsp; | ❌ | 128K tokens |
+| **Claude 3.7 Sonnet&nbsp;&nbsp;** | Smart | Eager | ✓ | 200K tokens |
 
 ## Models: Use Cases
 
-* **Gemini 2.5 Pro** - Day-to-day work with complex codebases
-* **o3** - Solving tough problems given copious context
-* **Claude 3.7 Sonnet** - Vibe coding, agentic workflows
+* **Gemini 2.5 Pro** – smart, dispassionate, big context window
+  * Good for:
+    * Day-to-day work with complex codebases
+* **o3** – slow, very smart, requires lots of context
+  * Good for:
+    * Solving tough problems given copious context
+* **Claude 3.7 Sonnet** – fast, excels at tool use, eager
+  * Good for:
+    * Vibe coding, agentic workflows
 
 ## Anatomy of a Conversation
 
