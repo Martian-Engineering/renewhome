@@ -16,11 +16,7 @@
 ## Rubber Duck
 <!-- hide-title -->
 
-![rubber-duck](/rubber-duck.avif)
-
-* Talk through your problem step by step
-* Often you'll find the solution just by explaining it
-* If not, at least you'll clarify your thinking
+![rubber-duck](/rubber-duck.png)
 
 ## Planning
 

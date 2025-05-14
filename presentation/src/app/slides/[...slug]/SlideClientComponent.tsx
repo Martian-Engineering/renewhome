@@ -156,7 +156,7 @@ export default function SlideClientComponent({
 
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center justify-start p-12 relative">
+      <main className="flex min-h-screen flex-col items-center justify-center py-8 px-6 relative">
         {/* Logo in top left */}
         <div className="absolute top-6 left-6 md:top-8 md:left-8 p-2">
           <Image
@@ -174,15 +174,16 @@ export default function SlideClientComponent({
             {sectionTitle}
           </span>
         </div>
-      <div className="w-full max-w-7xl mx-auto mt-6 md:mt-12 px-6 md:px-10">
-        {/* Show the title unless hide-title directive is found */}
-        {(!slideData.styleOptions?.hideTitle) && (
-          <h1 className="text-3xl md:text-5xl font-bold mb-6 text-left">{slideData.title}</h1>
-        )}
-        
-        <div
-          className={`prose prose-lg lg:prose-2xl prose-headings:font-bold prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-ul:list-disc prose-ol:list-decimal max-w-none ${slideData.styleOptions?.isLead ? 'lead' : ''} ${slideData.styleOptions?.imageColumns ? 'image-columns' : ''}`}
-        >
+      <div className="w-full max-w-7xl mx-auto px-6 md:px-10 flex flex-col items-center justify-center">
+        {/* Combined container for title and content with no gap */}
+        <div className="flex flex-col w-full">
+          {/* Show the title unless hide-title directive is found */}
+          {(!slideData.styleOptions?.hideTitle) && (
+            <h1 className="text-3xl md:text-5xl font-bold mb-0 text-left">{slideData.title}</h1>
+          )}
+          <div
+            className={`prose prose-lg lg:prose-2xl prose-headings:font-bold prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-ul:list-disc prose-ol:list-decimal max-w-none mt-1 ${slideData.styleOptions?.isLead ? 'lead' : ''} ${slideData.styleOptions?.imageColumns ? 'image-columns' : ''}`}
+          >
           {/* Debug: {slideData.id} */}
           {processedContent.length > 0 ? (
             processedContent
@@ -195,11 +196,12 @@ export default function SlideClientComponent({
               />
             </div>
           )}
+          </div>
         </div>
       </div>
       
       {/* Show slide counter only */}
-      <div className="fixed bottom-8 left-0 right-0 text-center text-base text-gray-500 z-10">
+      <div className="fixed bottom-4 left-0 right-0 text-center text-base text-gray-500 z-10">
         <div>
           Slide {slideData.number} of {slides.length} | 
           Section {slideData.sectionNumber} of 5 
