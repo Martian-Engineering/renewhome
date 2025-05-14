@@ -182,7 +182,7 @@ export default function SlideClientComponent({
             <h1 className="text-3xl md:text-5xl font-bold mb-0 text-left">{slideData.title}</h1>
           )}
           <div
-            className={`prose prose-lg lg:prose-2xl prose-headings:font-bold prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-ul:list-disc prose-ol:list-decimal max-w-none mt-1 ${slideData.styleOptions?.isLead ? 'lead' : ''} ${slideData.styleOptions?.imageColumns ? 'image-columns' : ''}`}
+            className={`prose prose-xl lg:prose-2xl prose-headings:font-bold prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-ul:list-disc prose-ol:list-decimal max-w-none mt-1 ${slideData.styleOptions?.isLead ? 'lead' : ''} ${slideData.styleOptions?.imageColumns ? 'image-columns' : ''}`}
           >
           {/* Debug: {slideData.id} */}
           {processedContent.length > 0 ? (
