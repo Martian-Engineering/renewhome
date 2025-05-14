@@ -6,8 +6,7 @@
 **Goal: establish a shared mental model**
 
 * Leading models, personalities, use-cases
-<!-- * Anatomy of a conversation
-* Context management -->
+* Anatomy of a conversation
 * Vibe coding v. AI-assisted development
 
 ## Models
