@@ -29,7 +29,39 @@
 
 ## Anatomy of a Conversation
 
-TODO
+```json
+[{
+  "role": "system",
+  "content": "You are a helpful assistant that can answer questions and help with tasks."
+}, {
+  "role": "user",
+  "content": "What's the difference between vibe coding and AI-assisted development?"
+}, {
+  "role": "assistant",
+  "content": "Vibe coding is when the AI writes all the code, and AI-assisted development is when the AI helps you write the code."
+}]
+```
+
+## Anatomy of a Conversation (continued)
+
+```json
+[{
+  "role": "system",
+  "content": "You are a helpful assistant that can answer questions and help with tasks."
+}, {
+  "role": "user",
+  "content": "What's the difference between vibe coding and AI-assisted development?"
+}, {
+  "role": "assistant",
+  "content": "Vibe coding is when the AI writes all the code, and AI-assisted development is when the AI helps you write the code."
+}, {
+  "role": "user",
+  "content": "Does vibe coding ever work?"
+}, {
+  "role": "assistant",
+  "content": "Yes, it can work for simple tasks or when the code is very short-lived."
+}]
+```
 
 ## Vibe Coding v. AI-assisted Development
 
