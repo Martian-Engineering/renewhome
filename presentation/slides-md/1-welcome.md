@@ -51,7 +51,6 @@ Our answer: yes, if you know how to use it
 
 – Our clients & friends
 
-
 ## Show of hands
 <!-- lead -->
 
