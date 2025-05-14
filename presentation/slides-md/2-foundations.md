@@ -10,22 +10,17 @@
 * Context management -->
 * Vibe coding v. AI-assisted development
 
-## Models: Personalities
-<!-- hide-title -->
+## Models
 
-![](/personalities.png)
+* **Gemini 2.5 Pro** – balanced, good with big codebases
+* **ChatGPT o3** – smart, good for hard questions
+* **Claude 3.7 Sonnet** – fast, good at using tools
 
-## Models: Personalities
+## Models - Caveats
 
-* **Gemini 2.5 Pro** – smart, TODO: Ted
-* **o3** – slow, very smart, requires lots of context
-* **Claude 3.7 Sonnet** – fast, excels at tool use, may rewrite React from scratch if you don't watch it closely
-
-## Models: Use Cases
-
-* **Gemini 2.5 Pro** - Day-to-day work with complex codebases
-* **o3** - Solving tough problems given copious context
-* **Claude 3.7 Sonnet** - Vibe coding, agentic workflows
+* **Gemini 2.5 Pro** – availability issues
+* **ChatGPT o3** – slow, know-it-all
+* **Claude 3.7 Sonnet** – overeager, sneaky
 
 ## Anatomy of a Conversation
 
