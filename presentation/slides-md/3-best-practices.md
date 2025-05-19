@@ -9,8 +9,8 @@
 
 ## Don't offload thinking
 
-* **Planning:** Engage with AI like a colleague
-* **Design:** Write detailed technical specifications
+* **Ideating:** Engage with AI like a colleague
+* **Planning:** Write detailed technical specifications
 * **Implementation:** Review AI-generated code thoroughly
 
 ## Rubber Duck
@@ -18,7 +18,7 @@
 
 ![rubber-duck](/rubber-duck.png)
 
-## Planning
+## Ideating
 
 > I've got an idea I'm trying to work out. I don't want you to write any code yet, just help me think through the design. If anything seems unclear, please ask me clarifying questions. Look for gaps in my thinking and help me fill them in. 
 >
@@ -26,7 +26,7 @@
 <!-- * It's okay to start with a vague idea
 * AI's are great at unblocking ideas -->
 
-## Planning
+## Ideating
 
 > I've got an idea I'm trying to work out. I don't want you to write any code yet, just help me think through the design. If anything seems unclear, please ask me clarifying questions. Look for gaps in my thinking and help me fill them in. 
 >
@@ -34,7 +34,7 @@
 > 
 > **Look at `src/some/file.ts` and `src/some/other/file.ts` as a reference for our implementation -- these represent idiomatic uses of `some-library-or-framework-or-pattern` that we use in this project.**
 
-## Planning
+## Ideating
 
 > I've got an idea I'm trying to work out. I don't want you to write any code yet, just help me think through the design. If anything seems unclear, please ask me clarifying questions. Look for gaps in my thinking and help me fill them in. 
 >
@@ -42,7 +42,7 @@
 > 
 > **Let's capture a summary of what we discussed in a markdown file in the `notes/` directory of the project. Make sure to include code samples, references to relevant files, and context for our decisions.**
 
-## Design
+## Planning
 
 * Write a specification describing the work to be completed
 * Include:
@@ -68,7 +68,7 @@
 >
 > Your task is to amend the search schema and document such that these fields are collapsed, and ensure that the instantiation of any of these records populates these fields appropriately.
 
-## Design: involve the AI
+## Planning: involve the AI
 
 1. Write an outline of a spec with relevant context
 2. Reference other documentation by path to markdown files
